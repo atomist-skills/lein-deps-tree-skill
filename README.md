@@ -14,21 +14,6 @@ Opens and closes GitHub Issues based on the presence of confusing Lein dependenc
 
 ---
 
-## Building
-
-Ideally, we'd push new versions with skills but I'm still doing this by hand right now.
-
-Read this and hope that you can get docker working:
-
-https://cloud.google.com/container-registry/docs/advanced-authentication#gcloud-helper
-
-The run `docker login gcr.io`
-
-```
-$> ./build-docker.sh 0.1.x
-$> ./bootstrap-staging.sh
-```
-
 Created by [Atomist][atomist].
 Need Help?  [Join our Slack workspace][slack].
 
