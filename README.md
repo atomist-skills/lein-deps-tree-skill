@@ -26,8 +26,7 @@ The run `docker login gcr.io`
 
 ```
 $> ./build-docker.sh 0.1.x
-$> ./bootstrap-staging.sh gcr.io/atomist-container-skills/lein-deps-tree-skill:0.1.x 0.1.x /Users/slim/skills/lein-deps-tree-skill
-$> ./bootstrap-prod.sh gcr.io/atomist-container-skills/lein-deps-tree-skill:0.1.x 0.1.x /Users/slim/skills/lein-deps-tree-skill
+$> ./bootstrap-staging.sh
 ```
 
 Created by [Atomist][atomist].
