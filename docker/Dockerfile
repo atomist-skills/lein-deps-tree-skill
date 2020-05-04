@@ -1,6 +1,6 @@
 FROM gcr.io/atomist-container-skills/clojure-base:0.0.1
  
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app 
 
 COPY package*.json /usr/src/app/
 RUN npm ci \
