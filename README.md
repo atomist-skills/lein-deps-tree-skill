@@ -18,9 +18,14 @@ Opens and closes GitHub Issues based on the presence of confusing Lein dependenc
 
 Ideally, we'd push new versions with skills but I'm still doing this by hand right now.
 
+Read this and hope that you can get docker working:
+
+https://cloud.google.com/container-registry/docs/advanced-authentication#gcloud-helper
+
+The run `docker login gcr.io`
+
 ```
 $> ./build-docker.sh 0.1.x
-$> docker push gcr.io/atomist-container-skills/lein-deps-tree-skill:0.1.x
 $> ./bootstrap-staging.sh gcr.io/atomist-container-skills/lein-deps-tree-skill:0.1.x 0.1.x /Users/slim/skills/lein-deps-tree-skill
 $> ./bootstrap-prod.sh gcr.io/atomist-container-skills/lein-deps-tree-skill:0.1.x 0.1.x /Users/slim/skills/lein-deps-tree-skill
 ```

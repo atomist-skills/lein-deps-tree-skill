@@ -47,7 +47,6 @@ parameters:
       name: "scope"
       required: false
 
-
 artifacts:
   docker:
     - name: skill
