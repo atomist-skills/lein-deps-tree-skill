@@ -15,5 +15,3 @@ RUN "`npm bin`/shadow-cljs" release release --verbose \
 
 ENTRYPOINT [ "node" ]
 CMD [ "index.js" ]
- 
- 
