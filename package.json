@@ -1,8 +1,4 @@
 {
-  "name": "lein-deps-tree",
-  "version": "0.1.0",
-  "author": "james@atomist.com",
-  "description": "Open or close a Github Issue based on presence of confusing dependencies",
   "scripts": {
     "build:watch": "shadow-cljs watch script",
     "build": "shadow-cljs release release"

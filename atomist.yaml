@@ -25,13 +25,13 @@ skill:
   - DEPENDENCIES
   - DEV_EX
   license: Apache-2.0
-  homepage: https://github.com/atomist-skills/lein-deps-tree
-  repository: https://github.com/atomist-skills/lein-deps-tree
+  homepage: https://github.com/atomist-skills/lein-deps-tree-skill
+  repository: https://github.com/atomist-skills/lein-deps-tree-skill
   icon: https://leiningen.org/img/leiningen.jpg
   dispatch: single
 
   package:
-    use: 'atomist/package-cljs-skill'
+    use: 'atomist/package-docker-skill'
 
 resource_providers:
   - name: github
@@ -51,11 +51,6 @@ artifacts:
   docker:
     - name: skill
       image: gcr.io/atomist-container-skills/lein-deps-tree-skill:0.1.0
-      env:
-        - name: ARTIFACTORY_USER
-          value: clojure-build
-        - name: ARTIFACTORY_PWD
-          value: ${configuration[0].parameters.maven}
 
 subscriptions:
 - >-
