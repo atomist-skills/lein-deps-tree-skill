@@ -1,4 +1,5 @@
 {:deps {:aliases [:dev :test]},
+ :jvm-opts ["-Xmx1G"]
  :builds
  {:script
   {:target :node-script,
