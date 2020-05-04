@@ -1,0 +1,111 @@
+#
+#  Copyright © 2019 Atomist, Inc.
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+
+skill:
+  name: "atomist/lein-deps-tree"
+  title: Lein Dependency Tree
+  author: Atomist
+  description: Keep your project free from confusing dependencies
+  long_description: |
+    Open and close Github Issues depending on the presence of confusing Leiningen dependencies
+  category:
+  - DEPENDENCIES
+  - DEV_EX
+  license: Apache-2.0
+  homepage: https://github.com/atomist-skills/lein-deps-tree
+  repository: https://github.com/atomist-skills/lein-deps-tree
+  icon: https://leiningen.org/img/leiningen.jpg
+  dispatch: single
+
+  package:
+    use: 'atomist/package-cljs-skill'
+
+resource_providers:
+  - name: github
+    description: GitHub
+    typeName: GitHubAppResourceProvider
+    minRequired: 1
+    maxAllowed: 1
+
+parameters:
+  - repoFilter:
+      description: "The set of Repositories for this String Replace rule."
+      displayName: "Repository Scope"
+      name: "scope"
+      required: false
+
+
+artifacts:
+  docker:
+    - name: skill
+      image: gcr.io/atomist-container-skills/lein-deps-tree-skill:0.1.0
+      env:
+        - name: ARTIFACTORY_USER
+          value: clojure-build
+        - name: ARTIFACTORY_PWD
+          value: ${configuration[0].parameters.maven}
+
+subscriptions:
+- >-
+  subscription OnAnyPush {
+    Push {
+        id
+        branch
+        repo {
+            channels {
+                channelId
+                name
+            }
+            branches {
+                id
+            }
+            defaultBranch
+            id
+            name
+            org {
+                id
+                owner
+                ownerType
+                scmProvider {
+                    credential {
+                        scopes
+                        id
+                        secret
+                        owner {
+                            name
+                            login
+                        }
+                    }
+                    id
+                    name
+                    providerId
+                    providerType
+                    authProviderId
+                }
+                team {
+                    chatTeams {
+                        name
+                        id
+                    }
+                }
+            }
+        }
+        after {
+            id
+            sha
+        }
+    }
+  }
