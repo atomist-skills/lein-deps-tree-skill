@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build:watch": "shadow-cljs watch script",
+    "build:watch": "shadow-cljs watch dev",
     "build": "shadow-cljs release release"
   },
   "dependencies": {
