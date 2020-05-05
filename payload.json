@@ -1,0 +1,26 @@
+{
+  "data": {
+    "Push": [
+      {
+        "repo": {
+          "org": {
+            "owner": "atomist-skills"
+           },
+          "name": "lein-deps-tree-skill"
+        },
+        "after": {
+          "sha": "7b04413a7f028ec6d438bda87b2039c8523ad4e7"
+        }
+      }
+    ]
+  },
+  "extensions": {
+    "team_id": "T29E48P34"
+  },
+  "secrets": [
+    {
+      "uri": "atomist://api-key",
+      "value": "<insert here>"
+    }
+  ]
+}
