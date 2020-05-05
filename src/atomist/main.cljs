@@ -68,26 +68,29 @@
       (catch :default ex
         (log/error "raised exception " ex)))))
 
-(defn raise-issue-if-not-exists
-  [request]
-  (go
-    (let [sha (-> request :data :Push first :after :sha)]
-      (if (:token request)
-        (if-let [issue (-> (<! (list-issues request sha)) :items not-empty first)]
-          (do
-            (log/debugf "Found issue %s for current push, doing nothing" (:number issue))
-            (<! (api/finished {:success "found an issue already, doing nothing"})))
-          (if-let [issue (some-> (<! (list-issues request)) :items first)]
+(defn raise-issue-if-not-exists [handler]
+  (fn [request]
+    (go
+      (if (:lein-deps-tree request)
+        (let [sha (-> request :data :Push first :after :sha)]
+          (if (and (:token request))
+            (if-let [issue (-> (<! (list-issues request sha)) :items not-empty first)]
+              (do
+                (log/debugf "Found issue %s for current push, doing nothing" (:number issue))
+                (<! (handler request)))
+              (if-let [issue (some-> (<! (list-issues request)) :items first)]
+                (do
+                  (log/debugf "Found issue %s for another commit, updating" (:number issue))
+                  (<! (comment-issue request issue (gstring/format "Commit %s still has confusing lein dependencies\n\n```%s```" sha (:lein-deps-tree request))))
+                  (<! (handler request)))
+                (do
+                  (log/debugf "Didn't find an issue, creating")
+                  (<! (create-issue request (gstring/format "Commit %s introduced confusing lein dependencies\n\n```%s```" sha (:lein-deps-tree request))))
+                  (<! (handler request)))))
             (do
-              (log/debugf "Found issue %s for another commit, updating" (:number issue))
-              (<! (comment-issue request issue (gstring/format "Commit %s still has confusing lein dependencies\n\n```%s```" sha (:lein-deps-tree request))))
-              (<! (api/finished {:success "Updated an issue for HEAD commit"})))
-            (do
-              (log/debugf "Didn't find an issue, creating")
-              (<! (create-issue request (gstring/format "Commit %s introduced confusing lein dependencies\n\n```%s```" sha (:lein-deps-tree request))))
-              (<! (api/finished {:success "Updated an issue for HEAD commit"})))))
-        (do (log/warnf "Could not find github token")
-            (<! (api/finished {:failure "Could not find a github token"})))))))
+              (log/warnf "Could not find github token")
+              (<! (api/finish request :failure "Could not find a github token to raise issue")))))
+        (<! (handler request))))))
 
 (defn close-issue
   [request issue]
@@ -113,10 +116,9 @@
       (do
         (log/infof "Found issue %s for another commit, closing" (:number issue))
         (-> (comment-issue request issue (gstring/format "Commit %s removed confusing lein dependencies" (-> request :data :Push first :after :sha))))
-        (<! (close-issue request issue))
-        (<! (api/finished {:success "Closed an issue for previous commit"}))))))
+        (<! (close-issue request issue))))))
 
-(defn run-deps-tree []
+(defn run-deps-tree [handler]
   (fn [request]
     (go
       (let [atmhome (io/file (.. js/process -env -ATOMIST_HOME))]
@@ -127,25 +129,26 @@
               err
               (do
                 (log/warnf "Error running lein deps: %s" stderr)
-                (<! (api/finished {:message "---> Error running lein deps" :failure (str "Error running lein deps: " stderr)})))
+                (<! (api/finish request :failure (str "Error running lein deps: " stderr))))
 
               (str/includes? stdout "Possibly confusing dependencies found:")
-              (do
-                (log/infof "Ensuring issue exists...")
-                (<! (raise-issue-if-not-exists (assoc request :lein-deps-tree stdout))))
+              (<! (handler (assoc request :lein-deps-tree stdout)))
 
               :else
-              (<! (close-issue-if-exists request))))
+              (do
+                (<! (close-issue-if-exists request))
+                (<! (handler request)))))
           (do
             (log/warn "there was no checked out " (.getPath atmhome))
-            (<! (api/finished {:message "---> No checkout was performed" :failure "Failed to checkout"}))))))))
+            (<! (api/finish request :failure "Failed to checkout"))))))))
 
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
    the context is extract fro the environment using the container/mw-make-container-request middleware"
   []
-  ((-> #_(api/finished :message "----> Push event handler finished"
-                       :success "completed line-deps-tree-skill")
+  ((-> (api/finished :message "----> Push event handler finished"
+                     :success "completed line-deps-tree-skill")
+       (raise-issue-if-not-exists)
        (run-deps-tree)
        (api/extract-github-token)
        (api/create-ref-from-push-event)
