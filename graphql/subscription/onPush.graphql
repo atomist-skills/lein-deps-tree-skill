@@ -14,6 +14,7 @@ subscription OnAnyPush {
             id
             name
             owner
+            url
             org {
                 id
                 owner
@@ -28,6 +29,7 @@ subscription OnAnyPush {
                             login
                         }
                     }
+                    apiUrl
                     id
                     name
                     providerId
