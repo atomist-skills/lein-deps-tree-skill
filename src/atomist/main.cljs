@@ -123,7 +123,7 @@
     (go
       (let [atmhome (io/file (.. js/process -env -ATOMIST_HOME))]
         (if (and (.exists atmhome) (.exists (io/file atmhome "project.clj")))
-          (let [[err stdout stderr] (<! (proc/aexec "lein deps :tree-data 2>&1" {:cwd (.getPath atmhome)}))]
+          (let [[err stdout stderr] (<! (proc/aexec "lein deps :tree-data" {:cwd (.getPath atmhome)}))]
             (cond
 
               err
