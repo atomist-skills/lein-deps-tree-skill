@@ -9,6 +9,7 @@ subscription OnAnyPush {
             }
             branches {
                 id
+                name
             }
             defaultBranch
             id
@@ -19,6 +20,10 @@ subscription OnAnyPush {
                 id
                 owner
                 ownerType
+                provider {
+                    gitUrl
+                    apiUrl
+                }
                 scmProvider {
                     credential {
                         scopes
@@ -29,6 +34,7 @@ subscription OnAnyPush {
                             login
                         }
                     }
+                    gitUrl
                     apiUrl
                     id
                     name
@@ -45,8 +51,10 @@ subscription OnAnyPush {
             }
         }
         after {
+            timestamp
             id
             sha
+            url
         }
     }
 }
