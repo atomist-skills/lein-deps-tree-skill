@@ -13,6 +13,7 @@ subscription OnAnyPush {
             defaultBranch
             id
             name
+            owner
             org {
                 id
                 owner
