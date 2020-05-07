@@ -55,4 +55,4 @@ parameters:
 artifacts:
   docker:
     - name: skill
-      image: gcr.io/atomist-container-skills/lein-deps-tree-skill:8d97cec651f1aa9dcab7690256b3e40f7894a9c1
+      image: gcr.io/atomist-container-skills/lein-deps-tree-skill:699aa1bea7f1c585c7d7b614240d581dbbc55764
