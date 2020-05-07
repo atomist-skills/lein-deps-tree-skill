@@ -25,24 +25,6 @@ query OnAnyPush {
                     gitUrl
                     apiUrl
                 }
-                scmProvider {
-                    credential {
-                        scopes
-                        id
-                        secret
-                        owner {
-                            name
-                            login
-                        }
-                    }
-                    gitUrl
-                    apiUrl
-                    id
-                    name
-                    providerId
-                    providerType
-                    authProviderId
-                }
                 team {
                     chatTeams {
                         name
@@ -51,14 +33,14 @@ query OnAnyPush {
                     resourceProviders {
                         __typename
                         id
-                        ... on MavenRepositoryProvider {
+                        ... on ArtifactoryMavenRepositoryProvider {
                             url
                             name
                         }
                         credential {
                             id
                             __typename
-                            ... on OAuthToken {
+                            ... on Password {
                                 secret
                             }
                         }
