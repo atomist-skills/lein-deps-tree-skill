@@ -134,8 +134,8 @@
                 (log/warnf "Error running lein deps: %s" stderr)
                 (<! (api/finish request :failure (str "Error running lein deps: " stderr))))
 
-              (str/includes? stdout "Possibly confusing dependencies found:")
-              (<! (handler (assoc request :lein-deps-tree stdout)))
+              (str/includes? stderr "Possibly confusing dependencies found:")
+              (<! (handler (assoc request :lein-deps-tree stderr)))
 
               :else
               (do
