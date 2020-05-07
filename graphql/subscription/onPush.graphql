@@ -49,6 +49,7 @@ query OnAnyPush {
                         id
                     }
                     resourceProviders {
+                        __typename
                         id
                         ... on MavenRepositoryProvider {
                             url
@@ -57,9 +58,7 @@ query OnAnyPush {
                         credential {
                             id
                             __typename
-                            ... on Password {
-                                __typename
-                                id
+                            ... on OAuthToken {
                                 secret
                             }
                         }
