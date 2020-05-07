@@ -1,4 +1,4 @@
-subscription OnAnyPush {
+query OnAnyPush {
     Push {
         id
         branch
@@ -21,6 +21,7 @@ subscription OnAnyPush {
                 owner
                 ownerType
                 provider {
+                    __typename
                     gitUrl
                     apiUrl
                 }
@@ -46,6 +47,22 @@ subscription OnAnyPush {
                     chatTeams {
                         name
                         id
+                    }
+                    resourceProviders {
+                        id
+                        ... on MavenRepositoryProvider {
+                            url
+                            name
+                        }
+                        credential {
+                            id
+                            __typename
+                            ... on Password {
+                                __typename
+                                id
+                                secret
+                            }
+                        }
                     }
                 }
             }

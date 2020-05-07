@@ -6,65 +6,23 @@
 
 1.  **Run build server**
 
-    ```
+    ```shell
     npm install
     npm run build:watch
     ```
 
     The build server will have created an Nrepl server:
     
-    ```
+    ```shell
     shadow-cljs - nREPL server started on port 62170
     shadow-cljs - watching build :dev
     ```
 
 3.  **start a Node host running index.js**
 
-    Initialize with environment variables to set up the context for the skill
+    Initialize with environment variables to set up the context for the skill by editing `run-local.sh` to your needs
     
-    ```
-    export WORKSPACE_ID=T29E48P34
-    export GRAPHQL_ENDPOINT=https://automation.atomist.com/graphql
-    export ATOMIST_PAYLOAD=/Users/slim/skills/lein-deps-tree-skill/payload.json
-    export ATOMIST_STORAGE=gs://t29e48p34-workspace-storage
-    export ATOMIST_CORRELATION_ID=whatever
-    export ATOMIST_HOME=/Users/slim/atmhq/view-service
-    export GOOGLE_APPLICATION_CREDENTIALS=/Users/slim/skills/lein-deps-tree-skill/atomist-skill-production-ec3c6e5c9a1b.json
-    export TOPIC=projects/atomist-skill-production/topics/packaging-test-topic
-    export IN_REPL=true
-    node index.js
-    ```
-    
-    Note that `ATOMIST_PAYLOAD` should reference a file with Push `application/json` content (with secrets):
-    
-    ```
-    {
-      "data": {
-        "Push": [
-          {
-            "repo": {
-              "channels": [
-                {
-                  "name": "package-cljs-skill",
-                  "channelId": "C0100Q8DFNE",
-                  "team": {
-                    "id": "T29E48P34",
-                    "name": "atomist-community"
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      },
-      "secrets": [
-        {
-          "uri": "atomist://api-key",
-          "value": "fill this in"
-        }
-      ]
-    }
-    ```
+    Note that `ATOMIST_PAYLOAD` should reference a file with Push `application/json` content (with secrets). (see payload.json)
     
     and `ATOMIST_HOME` should point at cloned copy of this Repo.  I have also used `GOOGLE_APPLICATION_CREDENTIALS`
     to test against a real Test PubSub Topic.  In the container, you'll have the response topic available, and
@@ -72,8 +30,9 @@
 
 4.  **switch repl to connect to this new Node.js process**
 
-    ```
+    ```clojure
     (shadow/repl :dev)
+    (atomist.main/handler) ;; to run the handler
     ```
 
 ---

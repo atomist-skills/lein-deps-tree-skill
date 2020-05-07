@@ -4,7 +4,20 @@
       {
         "repo": {
           "org": {
-            "owner": "atomist-skills"
+            "owner": "atomist-skills",
+            "team": {
+              "resourceProviders": [
+                {
+                  "credential": {
+                    "__typename": "Password",
+                    "id": "T095SFFBK_clojure-build_e9f4239c-1f51-4ceb-9397-07f61801a120_credential",
+                    "secret": "artifactory-secret"
+                  },
+                  "id": "T095SFFBK_e9f4239c-1f51-4ceb-9397-07f61801a120",
+                  "name": "clojure-skill",
+                  "url": "https://sforzando.jfrog.io/sforzando/libs-release-local"
+                }]
+            }
            },
           "name": "lein-deps-tree-skill"
         },
@@ -14,13 +27,31 @@
       }
     ]
   },
+  "skill": {
+    "configuration": {
+      "instances": [
+        {
+          "resourceProviders": [
+            {
+              "name": "maven",
+              "selectedResourceProviders": [
+                {
+                  "id": "T095SFFBK_e9f4239c-1f51-4ceb-9397-07f61801a120"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
   "extensions": {
     "team_id": "T29E48P34"
   },
   "secrets": [
     {
       "uri": "atomist://api-key",
-      "value": "<insert here>"
+      "value": "<insert>"
     }
   ]
 }

@@ -39,6 +39,11 @@ resource_providers:
     typeName: GitHubAppResourceProvider
     minRequired: 1
     maxAllowed: 1
+  - name: maven
+    description: Maven repository for resolving artifects referenced in project.clj
+    typeName: MavenRepositoryProvider
+    minRequired: 0
+    maxAllowed: 1
 
 parameters:
   - repoFilter:
