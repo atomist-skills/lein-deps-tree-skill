@@ -43,6 +43,9 @@ query OnAnyPush {
                             ... on Password {
                                 secret
                             }
+                            owner {
+                                login
+                            }
                         }
                     }
                 }

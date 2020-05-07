@@ -187,10 +187,15 @@
             (log/warn "Found Maven repo id in config and payload, but not secret was found. Let's hope it's not needed")
             (<! (handler request)))
 
+          (not (-> rp :credential :owner :login))
+          (do
+            (log/warn "Couldn't find maven repo username, let's hope we don't need it")
+            (<! (handler request)))
+
           :otherwise
           (do
             (log/info "Found Maven repo credentials, making them available to lein")
-            (<! (handler (assoc request :maven {:username (:name rp) :password (-> rp :credential :secret)})))))))))
+            (<! (handler (assoc request :maven {:username (-> rp :credential :owner :login) :password (-> rp :credential :secret)})))))))))
 
 (defn read-atomist-payload [handler]
   (letfn [(payload->owner [{:keys [data]}]
