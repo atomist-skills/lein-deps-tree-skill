@@ -86,7 +86,7 @@
                   (<! (handler request)))
                 (do
                   (log/debugf "Didn't find an issue, creating")
-                  (<! (create-issue request (gstring/format "Commit %s introduced confusing lein dependencies\n\n```%s```" sha (:lein-deps-tree request))))
+                  (<! (create-issue request (gstring/format "Commit %s has confusing lein dependencies\n\n```%s```" sha (:lein-deps-tree request))))
                   (<! (handler request)))))
             (do
               (log/warnf "Could not find github token")
@@ -135,7 +135,7 @@
                 (<! (api/finish request :failure (str "Error running lein deps: " stderr))))
 
               (str/includes? stderr "Possibly confusing dependencies found:")
-              (<! (handler (assoc request :lein-deps-tree stderr)))
+              (<! (handler (assoc request :lein-deps-tree (last (str/split stderr #"Possibly\ confusing\ dependencies\ found:")) stderr)))
 
               :else
               (do
