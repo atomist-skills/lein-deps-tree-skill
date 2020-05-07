@@ -150,47 +150,47 @@
   [handler]
   (fn [request]
     (go
-     (let [rp-id (some->> request
-                          :skill
-                          :configuration
-                          :instances
-                          first
-                          :resourceProviders
-                          (filter #(= "maven" (:name %)))
-                          first
-                          :selectedResourceProviders
-                          first
-                          :id)
-           rp (some->> request
-                       :data
-                       :Push
-                       first
-                       :repo
-                       :org
-                       :team
-                       :resourceProviders
-                       (filter #(= rp-id (:id %)))
-                       first)]
-       (cond
-         (not rp-id)
-         (do
-           (log/warn "could not find maven resource provider id in skill config payload ")
-           (<! (handler request)))
+      (let [rp-id (some->> request
+                           :skill
+                           :configuration
+                           :instances
+                           first
+                           :resourceProviders
+                           (filter #(= "maven" (:name %)))
+                           first
+                           :selectedResourceProviders
+                           first
+                           :id)
+            rp (some->> request
+                        :data
+                        :Push
+                        first
+                        :repo
+                        :org
+                        :team
+                        :resourceProviders
+                        (filter #(= rp-id (:id %)))
+                        first)]
+        (cond
+          (not rp-id)
+          (do
+            (log/warn "could not find maven resource provider id in skill config payload ")
+            (<! (handler request)))
 
-         (and rp-id (not rp))
-         (do
-           (log/warn "Found Maven repo id in config, but not in event payload - this might not work")
-           (<! (handler request)))
+          (and rp-id (not rp))
+          (do
+            (log/warn "Found Maven repo id in config, but not in event payload - this might not work")
+            (<! (handler request)))
 
-         (not (-> rp :credential :secret))
-         (do
-           (log/warn "Found Maven repo id in config and payload, but not secret was found. Let's hope it's not needed")
-           (<! (handler request)))
+          (not (-> rp :credential :secret))
+          (do
+            (log/warn "Found Maven repo id in config and payload, but not secret was found. Let's hope it's not needed")
+            (<! (handler request)))
 
-         :otherwise
-         (do
-           (log/info "Found Maven repo credentials, making them available to lein")
-           (<! (handler (assoc request :maven {:username (:name rp) :password (-> rp :credential :secret)})))))))))
+          :otherwise
+          (do
+            (log/info "Found Maven repo credentials, making them available to lein")
+            (<! (handler (assoc request :maven {:username (:name rp) :password (-> rp :credential :secret)})))))))))
 
 (defn read-atomist-payload [handler]
   (letfn [(payload->owner [{:keys [data]}]
@@ -201,29 +201,29 @@
                 (-> data :Tag first :commit :repo :name)))]
     (fn [request]
       (go
-       (api/trace "read-atomist-payload")
-       (try
-         (let [payload (-> (io/file (:payload request))
-                           (io/slurp)
-                           (json/->obj)
-                           (api/event->request))]
-           (log/info "extensions " (:extensions payload))
-           (log/info "skill " (:skill payload))
-           (log/info "secrets " (map :uri (:secrets payload)))
+        (api/trace "read-atomist-payload")
+        (try
+          (let [payload (-> (io/file (:payload request))
+                            (io/slurp)
+                            (json/->obj)
+                            (api/event->request))]
+            (log/info "extensions " (:extensions payload))
+            (log/info "skill " (:skill payload))
+            (log/info "secrets " (map :uri (:secrets payload)))
            ;;(log/info "data " (:data payload))
-           (if (contains? (:data payload) :Push)
-             (<! (handler
-                  (-> request
-                      (assoc :owner (payload->owner payload) :repo (payload->repo payload))
-                      (merge payload {:api-key (->> payload :secrets (filter #(= "atomist://api-key" (:uri %))) first :value)}))))
-             (do
-               (when-let [f (io/file (:dir request))]
-                 (log/infof "%s - %s" (.getPath f) (.exists f))
-                 (log/infof "Tag %s - %s" (-> request :data :Tag :name) (-> request :data :Tag :description)))
-               (<! (api/finish request :success "not building new Tag event")))))
-         (catch :default ex
-           (log/error ex)
-           request))))))
+            (if (contains? (:data payload) :Push)
+              (<! (handler
+                   (-> request
+                       (assoc :owner (payload->owner payload) :repo (payload->repo payload))
+                       (merge payload {:api-key (->> payload :secrets (filter #(= "atomist://api-key" (:uri %))) first :value)}))))
+              (do
+                (when-let [f (io/file (:dir request))]
+                  (log/infof "%s - %s" (.getPath f) (.exists f))
+                  (log/infof "Tag %s - %s" (-> request :data :Tag :name) (-> request :data :Tag :description)))
+                (<! (api/finish request :success "not building new Tag event")))))
+          (catch :default ex
+            (log/error ex)
+            request))))))
 
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
