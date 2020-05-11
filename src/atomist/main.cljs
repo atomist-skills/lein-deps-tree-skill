@@ -145,7 +145,7 @@
             (log/warn "there was no checked out " (.getPath atmhome))
             (<! (api/finish request :failure "Failed to checkout"))))))))
 
-(defn fetch-maven-repo-creds
+(defn extract-maven-repo-creds
   "TODO - make this work for many repositories"
   [handler]
   (fn [request]
@@ -197,6 +197,27 @@
             (log/info "Found Maven repo credentials, making them available to lein")
             (<! (handler (assoc request :maven {:username (-> rp :credential :owner :login) :password (-> rp :credential :secret)})))))))))
 
+(defn skip-if-not-default-branch
+  "Skip if we only operate on default branches, and this push isn't for it"
+  [handler]
+  (fn [request]
+    (go
+     (let [defaultOnly (some->> request
+                          :skill
+                          :configuration
+                          :instances
+                          first
+                          :parameters
+                          (filter #(= "defaultBranchOnly" (:name %)))
+                          first
+                          :value)
+           branch (->> request :data :Push first :branch)
+           defaultBranch (->> request :data :Push first :repo :defaultBranch)]
+       (log/infof "defaultBranchOnly %s, branch: %s, default branch: %s" defaultOnly branch defaultBranch)
+       (if (and defaultOnly (not= (branch defaultBranch)))
+         (<! (api/finish request :success "Doing nothing due to branch configuration"))
+         (<! (handler request)))))))
+
 (defn read-atomist-payload [handler]
   (letfn [(payload->owner [{:keys [data]}]
             (or (-> data :Push first :repo :owner)
@@ -238,10 +259,11 @@
                      :success "completed line-deps-tree-skill")
        (raise-issue-if-not-exists)
        (run-deps-tree)
-       (fetch-maven-repo-creds)
+       (extract-maven-repo-creds)
        (api/extract-github-token)
        (api/create-ref-from-push-event)
        (api/skip-push-if-atomist-edited)
+       (skip-if-not-default-branch)
        (api/status)
        ;; make sure we don't log any secrets etc...
        ((api/compose-middleware

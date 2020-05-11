@@ -51,6 +51,12 @@ parameters:
       displayName: "Repository Scope"
       name: "scope"
       required: false
+  - boolean:
+      description: "Act only on default branch of the repo?"
+      displayName: "Default Branch Only"
+      name: "defaultBranchOnly"
+      required: false
+      defaultValue: true
 
 artifacts:
   docker:
