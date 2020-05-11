@@ -202,21 +202,21 @@
   [handler]
   (fn [request]
     (go
-     (let [defaultOnly (some->> request
-                          :skill
-                          :configuration
-                          :instances
-                          first
-                          :parameters
-                          (filter #(= "defaultBranchOnly" (:name %)))
-                          first
-                          :value)
-           branch (->> request :data :Push first :branch)
-           defaultBranch (->> request :data :Push first :repo :defaultBranch)]
-       (log/infof "defaultBranchOnly %s, branch: %s, default branch: %s" defaultOnly branch defaultBranch)
-       (if (and defaultOnly (not= (branch defaultBranch)))
-         (<! (api/finish request :success "Doing nothing due to branch configuration"))
-         (<! (handler request)))))))
+      (let [defaultOnly (some->> request
+                                 :skill
+                                 :configuration
+                                 :instances
+                                 first
+                                 :parameters
+                                 (filter #(= "defaultBranchOnly" (:name %)))
+                                 first
+                                 :value)
+            branch (->> request :data :Push first :branch)
+            defaultBranch (->> request :data :Push first :repo :defaultBranch)]
+        (log/infof "defaultBranchOnly %s, branch: %s, default branch: %s" defaultOnly branch defaultBranch)
+        (if (and defaultOnly (not= (branch defaultBranch)))
+          (<! (api/finish request :success "Doing nothing due to branch configuration"))
+          (<! (handler request)))))))
 
 (defn read-atomist-payload [handler]
   (letfn [(payload->owner [{:keys [data]}]
