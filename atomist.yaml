@@ -55,7 +55,7 @@ parameters:
       description: "Act only on default branch of the repo?"
       displayName: "Default Branch Only"
       name: "defaultBranchOnly"
-      required: false
+      required: true
       defaultValue: true
 
 artifacts:
