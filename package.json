@@ -4,10 +4,13 @@
   "author": "james@atomist.com",
   "description": "Open or close a Github Issue based on presence of confusing dependencies",
   "scripts": {
-    "build:watch": "shadow-cljs watch script",
-    "build": "shadow-cljs release release"
+    "build:watch": "shadow-cljs watch dev",
+    "build": "shadow-cljs release release",
+    "bundle": "bundle",
+    "skill": "npm run build && npm run bundle"
   },
   "dependencies": {
+    "@atomist/api-cljs": "^0.4.32",
     "@atomist/automation-client": "^1.7.0",
     "@atomist/skill-logging": "0.1.0-master.20200316180914",
     "@google-cloud/pubsub": "^1.0.0",
@@ -16,7 +19,9 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
+    "@atomist/skill-bundler": "^0.1.12",
     "shadow-cljs": "^2.8.69",
     "source-map-support": "0.5.9"
-  }
+  },
+  "main": "node_modules/@atomist/api-cljs/app.js"
 }

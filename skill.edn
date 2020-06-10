@@ -1,0 +1,53 @@
+{:description "Keep your project free from confusing dependencies",
+ :category ["DEPENDENCIES" "DEV_EX"],
+ :package {:use "atomist/package-cljs-skill"},
+ :repository "https://github.com/atomist-skills/lein-deps-tree",
+ :license "Apache-2.0",
+ :homepage "https://github.com/atomist-skills/lein-deps-tree",
+ :displayName "lein deps tree skill",
+ :name "atomist/lein-deps-tree",
+ :long_description
+ "Open and close Github Issues depending on the presence of confusing Leiningen dependencies\n",
+ :resource_providers
+ [{:name "github",
+   :description "GitHub",
+   :typeName "GitHubAppResourceProvider",
+   :minRequired 1,
+   :maxAllowed 1}],
+ :icon "https://leiningen.org/img/leiningen.jpg",
+ :title "Lein Dependency Tree",
+ :author "Atomist",
+ :subscriptions
+ ["subscription OnAnyPush {\n  Push {\n      id\n      branch\n      repo {\n          channels {\n              channelId\n              name\n          }\n          branches {\n              id\n          }\n          defaultBranch\n          id\n          name\n          org {\n              id\n              owner\n              ownerType\n              scmProvider {\n                  credential {\n                      scopes\n                      id\n                      secret\n                      owner {\n                          name\n                          login\n                      }\n                  }\n                  id\n                  name\n                  providerId\n                  providerType\n                  authProviderId\n              }\n              team {\n                  chatTeams {\n                      name\n                      id\n                  }\n              }\n          }\n      }\n      after {\n          id\n          sha\n      }\n  }\n}"],
+ :dispatch "single",
+ :iconUrl
+ "https://raw.githubusercontent.com/cljs/logo/master/cljs.png",
+ :runtime
+ {:memory 512,
+  :timeout 60,
+  :entry_point "eventhandler",
+  :name "nodejs10"},
+ :homepageUrl "https://github.com/atomist-skills/lein-deps-tree-skill",
+ :parameters
+ [{:repoFilter
+   {:description
+    "The set of Repositories for this String Replace rule.",
+    :displayName "Repository Scope",
+    :name "scope",
+    :required false}}],
+ :namespace "atomist",
+ :artifacts
+ {:docker
+  [{:name "skill",
+    :image
+    "gcr.io/atomist-container-skills/lein-deps-tree-skill:0.1.0",
+    :env
+    [{:name "ARTIFACTORY_USER", :value "clojure-build"}
+     {:name "ARTIFACTORY_PWD",
+      :value "${configuration[0].parameters.maven}"}]}],
+  :gcf
+  [{:name "package-cljs-skill",
+    :entryPoint "eventhandler",
+    :memory 512, 
+    :runtime "nodejs10", 
+    :timeout 60}]}}
