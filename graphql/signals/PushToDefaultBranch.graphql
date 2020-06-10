@@ -1,5 +1,5 @@
-query OnAnyPush {
-    Push {
+query PushToDefaultBranch ($sha: String, $branch: String) {
+    Push (filter: {after: {sha: $sha}, branch: $branch, repo: {defaultBranch: $branch}}) {
         id
         branch
         repo {

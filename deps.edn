@@ -1,9 +1,7 @@
 {:paths ["src"],
  :deps
  {org.clojure/clojurescript {:mvn/version "1.10.520"},
-  com.atomist/api-cljs {:mvn/version "0.3.42"},
-  cljs-http {:mvn/version "0.1.46"}
-  rewrite-cljs {:mvn/version "0.4.4"}},
+  com.atomist/api-cljs {:mvn/version "0.4.28"}},
  :aliases
  {:dev
   {:extra-deps
@@ -16,10 +14,16 @@
   {:extra-deps {cljfmt {:mvn/version "0.6.7"}},
    :main-opts ["-m" "cljfmt.main" "fix" "src" "test"]},
   :version
-  {:extra-deps {metav {:mvn/version "1.6.7"}},
-   :main-opts ["-m" "metav.display"]},
+  {:extra-deps
+   {metav
+    {:git/url "https://github.com/slimslenderslacks/metav.git",
+     :sha "f2d683806d4cbada7a7ad824b033a46f9e242e5a"}},
+   :main-opts ["-m" "metav.display" "--prefix" ":none"]},
   :release
-  {:extra-deps {metav {:mvn/version "1.6.7"}},
+  {:extra-deps
+   {metav
+    {:git/url "https://github.com/slimslenderslacks/metav.git",
+     :sha "f2d683806d4cbada7a7ad824b033a46f9e242e5a"}},
    :main-opts
    ["-m"
     "metav.release"
@@ -27,7 +31,9 @@
     "--output-dir"
     "src"
     "--namespace"
-    "atomist.skill-meta" 
-    "--formats" 
-    "cljs" 
-    "--without-sign"]}}}
+    "atomist.skill-meta"
+    "--formats"
+    "cljs"
+    "--without-sign"
+    "--prefix"
+    ":none"]}}}
