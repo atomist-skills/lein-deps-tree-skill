@@ -1,4 +1,5 @@
 .idea/
+.atomist/
 node_modules/
 *.iml
 .cpcache

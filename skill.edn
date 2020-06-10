@@ -1,0 +1,40 @@
+{:description "Keep your project free from confusing dependencies",
+ :category ["DEPENDENCIES", "DEV_EX"],
+ :package {:use "atomist/package-docker-skill"},
+ :repository "https://github.com/atomist-skills/lein-deps-tree-skill.git",
+ :license "Apache-2.0",
+ :resourceProviders
+ [{:name "github",
+   :description "GitHub",
+   :typeName "GitHubAppResourceProvider",
+   :minRequired 1,
+   :maxAllowed 1}
+  {:name "maven",
+   :description "Maven repository for resolving artifects referenced in project.clj",
+   :typeName "MavenRepositoryProvider",
+   :minRequired 0,
+   :maxAllowed 1}
+  ],
+ :displayName "Lein Dependency Tree",
+ :name "lein-deps-tree",
+ :author "Atomist",
+ :dispatchStyle "single",
+ :iconUrl "https://leiningen.org/img/leiningen.jpg",
+ :homepageUrl "https://github.com/atomist-skills/lein-deps-tree-skill",
+ :parameters
+ [{:repoFilter
+   {:description "Which repos/orgs to look at",
+    :displayName "Repository Scope",
+    :name "scope",
+    :required false}}],
+ :namespace "atomist",
+ :artifacts
+ {:gcf
+  [{:name "lein-deps-tree",
+    :entryPoint "eventhandler",
+    :memory 1024, 
+    :runtime "nodejs10", 
+    :timeout 60}]}
+ :gateSubscriptions [{:name "PushToDefaultBranch"}]
+ :gates [{:name "PushToDefaultBranch"
+          :and [{:name "PushToDefaultBranch"}]}]}
