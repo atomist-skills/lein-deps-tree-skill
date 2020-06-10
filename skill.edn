@@ -1,7 +1,5 @@
 {:description "Keep your project free from confusing dependencies",
- :category ["DEPENDENCIES", "DEV_EX"],
- :package {:use "atomist/package-docker-skill"},
- :repository "https://github.com/atomist-skills/lein-deps-tree-skill.git",
+ :category ["DEPENDENCIES"],
  :license "Apache-2.0",
  :resourceProviders
  [{:name "github",
@@ -31,7 +29,7 @@
  :artifacts
  {:docker
   [{:name "skill",
-    :image "gcr.io/atomist-container-skills/lein-deps-tree-skill:0e36543c82c837e66ddecd85625031a6707d9244"}]}
+    :image "gcr.io/atomist-container-skills/lein-deps-tree-skill"}]}
  :gateSubscriptions [{:name "PushToDefaultBranch"}]
  :gates [{:name "PushToDefaultBranch"
           :and [{:name "PushToDefaultBranch"}]}]}
