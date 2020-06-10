@@ -29,12 +29,9 @@
     :required false}}],
  :namespace "atomist",
  :artifacts
- {:gcf
-  [{:name "lein-deps-tree",
-    :entryPoint "eventhandler",
-    :memory 1024, 
-    :runtime "nodejs10", 
-    :timeout 60}]}
+ {:docker
+  [{:name "skill",
+    :image "gcr.io/atomist-container-skills/lein-deps-tree-skill:0e36543c82c837e66ddecd85625031a6707d9244"}]}
  :gateSubscriptions [{:name "PushToDefaultBranch"}]
  :gates [{:name "PushToDefaultBranch"
           :and [{:name "PushToDefaultBranch"}]}]}
