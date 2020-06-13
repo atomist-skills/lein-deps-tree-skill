@@ -6,8 +6,7 @@
             [cljs-node-io.proc :as proc]
             [cljs.core.async :refer [<! >! chan timeout]]
             [cljs.pprint :refer [pprint]]
-            [clojure.string :as str]
-            goog.string.format)
+            [clojure.string :as str])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn run-deps-tree [handler]
@@ -106,5 +105,5 @@
        (api/create-ref-from-event)
        (api/skip-push-if-atomist-edited)
        (api/status)
-       (container/make-container-request))
+       (container/mw-make-container-request))
    {}))
