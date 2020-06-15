@@ -16,7 +16,9 @@
         (if (and (.exists atmhome) (.exists (io/file atmhome "project.clj")))
           (let [[err stdout stderr] (<! (proc/aexec "lein deps :tree-data" {:cwd (.getPath atmhome)
                                                                             :env {"ARTIFACTORY_USER" (-> request :maven :username)
-                                                                                  "ARTIFACTORY_PWD" (-> request :maven :password)}}))]
+                                                                                  "MVN_ARTIFACTORYMAVENREPOSITORY_USER" (-> request :maven :username)
+                                                                                  "ARTIFACTORY_PWD" (-> request :maven :password)
+                                                                                  "MVN_ARTIFACTORYMAVENREPOSITORY_PWD" (-> request :maven :password)}}))]
             (cond
 
               err
