@@ -99,7 +99,7 @@
   ((-> (api/finished :message "----> Push event handler finished"
                      :success "completed line-deps-tree-skill")
        (run-deps-tree)
-       (api/with-github-check-run :name "lein-deps-tree")
+       (api/with-github-check-run :name "lein-deps-tree-skill")
        (extract-maven-repo-creds)
        (api/extract-github-token)
        (api/create-ref-from-event)
