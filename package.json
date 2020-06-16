@@ -6,7 +6,7 @@
     "skill": "npm run bundle"
   },
   "dependencies": {
-    "@atomist/api-cljs": "^0.4.39"
+    "@atomist/api-cljs": "^0.4.43"
   },
   "devDependencies": {
     "@atomist/skill-bundler": "^0.1.13",
