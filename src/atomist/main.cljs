@@ -12,13 +12,16 @@
 (defn run-deps-tree [handler]
   (fn [request]
     (go
-      (let [atmhome (io/file (.. js/process -env -ATOMIST_HOME))]
+      (let [ATM-HOME (.. js/process -env -ATOMIST_HOME)
+            atmhome (io/file ATM-HOME)]
         (if (and (.exists atmhome) (.exists (io/file atmhome "project.clj")))
           (let [[err stdout stderr] (<! (proc/aexec "lein deps :tree-data" {:cwd (.getPath atmhome)
                                                                             :env {"ARTIFACTORY_USER" (-> request :maven :username)
                                                                                   "MVN_ARTIFACTORYMAVENREPOSITORY_USER" (-> request :maven :username)
                                                                                   "ARTIFACTORY_PWD" (-> request :maven :password)
-                                                                                  "MVN_ARTIFACTORYMAVENREPOSITORY_PWD" (-> request :maven :password)}}))]
+                                                                                  "MVN_ARTIFACTORYMAVENREPOSITORY_PWD" (-> request :maven :password)
+                                                                                  ;; use atm-home for .m2 directory
+                                                                                  "_JAVA_OPTIONS" (str "-Duser.home=" ATM-HOME)}}))]
             (cond
 
               err

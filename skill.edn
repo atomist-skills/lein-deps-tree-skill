@@ -20,7 +20,12 @@
  :iconUrl "https://leiningen.org/img/leiningen.jpg",
  :homepageUrl "https://github.com/atomist-skills/lein-deps-tree-skill",
  :parameters
- [{:repoFilter
+ [{:stringArray
+   {:name "docker_cache",
+    :displayName "Cache files or folders",
+    :description "Cache and restore file system content between executions of this skill",
+    :required false}}
+  {:repoFilter
    {:description "Which repos/orgs to look at",
     :displayName "Repository Scope",
     :name "scope",
