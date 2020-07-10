@@ -31,15 +31,15 @@
 
               (str/includes? stderr "Possibly confusing dependencies found:")
               (<! (handler (assoc request
-                             :checkrun/conclusion "failure"
-                             :checkrun/output {:title "lein deps :tree failure"
-                                               :summary stderr})))
+                                  :checkrun/conclusion "failure"
+                                  :checkrun/output {:title "lein deps :tree failure"
+                                                    :summary stderr})))
 
               :else
               (<! (handler (assoc request
-                             :checkrun/conclusion "success"
-                             :checkrun/output {:title "lein deps :tree success"
-                                               :summary "No confusing dependencies found"})))))
+                                  :checkrun/conclusion "success"
+                                  :checkrun/output {:title "lein deps :tree success"
+                                                    :summary "No confusing dependencies found"})))))
           (do
             (log/warn "there was no checked out " (.getPath atmhome))
             (<! (api/finish request :failure "Failed to checkout"))))))))
@@ -99,14 +99,14 @@
 (defn cancel-if-not-lein [handler]
   (fn [request]
     (go
-     (let [atmhome (io/file (.. js/process -env -ATOMIST_HOME))]
-       (if (.exists atmhome)
-         (if (.exists (io/file atmhome "project.clj"))
-           (<! (handler request))
-           (<! (api/finish request :success "Skipping non-lein project" :visibility :hidden)))
-         (do
-           (log/warn "there was no checked out " (.getPath atmhome))
-           (<! (api/finish request :failure "Failed to checkout"))))))))
+      (let [atmhome (io/file (.. js/process -env -ATOMIST_HOME))]
+        (if (.exists atmhome)
+          (if (.exists (io/file atmhome "project.clj"))
+            (<! (handler request))
+            (<! (api/finish request :success "Skipping non-lein project" :visibility :hidden)))
+          (do
+            (log/warn "there was no checked out " (.getPath atmhome))
+            (<! (api/finish request :failure "Failed to checkout"))))))))
 
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
