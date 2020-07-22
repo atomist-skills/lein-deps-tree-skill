@@ -1,6 +1,8 @@
 # `@atomist/lein-deps-tree`
 
 ## Problem
+
+Dependencies in lein can have clashing transitive dependencies which can lead to unexpected runtime behaviour, so it makes sense to exclude any clashes explicitly from the classpath to keep it clean.
  
 ## Developing Locally
 
