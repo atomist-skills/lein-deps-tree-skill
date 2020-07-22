@@ -1,10 +1,12 @@
 # `@atomist/lein-deps-tree`
 
-## Problem
-
-Dependencies in lein can have clashing transitive dependencies which can lead to unexpected runtime behaviour, so it makes sense to exclude any clashes explicitly from the classpath to keep it clean.
+## Intro
 
 This skill creates a GitHub check with a success status if there are no confusing dependencies when `lein deps :tree` is run, or a failure status otherwise
+
+## Why?
+
+Dependencies in lein can have clashing transitive dependencies which can lead to unexpected runtime behaviour, so it makes sense to exclude any clashes explicitly from the classpath to keep it clean.
 
 ## Developing Locally
 
