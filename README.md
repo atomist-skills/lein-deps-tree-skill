@@ -4,7 +4,7 @@
 
 Dependencies in lein can have clashing transitive dependencies which can lead to unexpected runtime behaviour, so it makes sense to exclude any clashes explicitly from the classpath to keep it clean.
 
-This skill creates a github check with a success status if there are no confusing dependencies when `lein deps :tree` is run, or a failure status otherwise
+This skill creates a GitHub check with a success status if there are no confusing dependencies when `lein deps :tree` is run, or a failure status otherwise
 
 ## Developing Locally
 
