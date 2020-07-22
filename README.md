@@ -1,6 +1,6 @@
 # `@atomist/lein-deps-tree`
 
-## Intro
+## Intro 
 
 This skill creates a GitHub check with a success status if there are no confusing dependencies when `lein deps :tree` is run, or a failure status otherwise
 
