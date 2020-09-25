@@ -1,12 +1,11 @@
 {:deps {:aliases [:dev :test]},
- :jvm-opts ["-Xmx1G"]
+ :jvm-opts ["-Xmx1G"],
  :builds
  {:release
-  {:target :node-script,
+  {:target :node-library,
    :output-to "index.js",
-   :main atomist.main/handler
    :exports {:handler atomist.main/handler},
-   :compiler-options {:optimizations :simple}},
+   :compiler-options {:optimizations :advanced}},
   :dev
   {:target :node-library,
    :exports {:handler atomist.main/handler}, 
