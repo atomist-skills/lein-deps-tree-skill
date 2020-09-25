@@ -78,7 +78,7 @@
 
           (and rp-id (not rp))
           (do
-            (log/warn "Found Maven repo id in config, but not in event payload - this might not work")
+            (log/warn "Found Maven repo id in config, but not in event payload - this probably will not work")
             (<! (handler request)))
 
           (not (-> rp :credential :secret))
