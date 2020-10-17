@@ -28,7 +28,7 @@
    :maxAllowed 1}
   ],
  :displayName "Lein Dependency Tree",
- :name "lein-deps-tree",
+ :name "lein-deps-tree-skill",
  :author "Atomist",
  :dispatchStyle "single",
  :iconUrl "https://leiningen.org/img/leiningen.jpg",
