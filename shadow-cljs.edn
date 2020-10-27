@@ -13,7 +13,6 @@
 ;; limitations under the License.
 
 {:deps true,
- :jvm-opts ["-Xmx1G"]
  :builds
  {:release
   {:target :node-script,
