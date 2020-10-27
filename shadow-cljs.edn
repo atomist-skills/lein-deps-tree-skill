@@ -12,7 +12,7 @@
 ;; See the License for the specific language governing permissions and
 ;; limitations under the License.
 
-{:deps true,
+{:deps {:aliases [:dev :test]},
  :jvm-opts ["-Xmx1G"]
  :builds
  {:release
