@@ -13,7 +13,7 @@
      (and
          ;; ensure that if content indexing triggers, that it only does so if all things are present
          (tx-content-index ?commit ?index)
-         [?fp :atomist.content.index/name "path-exists"]
+         [?index :atomist.content.index/name "path-exists"]
          [?index :atomist.content.index/value ?paths-exist])
      (tx-push ?commit _))
 
