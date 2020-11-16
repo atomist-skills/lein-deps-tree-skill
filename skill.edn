@@ -48,7 +48,4 @@
  :artifacts
  {:docker
   [{:name "skill",
-    :image "gcr.io/atomist-container-skills/lein-deps-tree-skill"}]}
- :gateSubscriptions [{:name "DepsPushToDefaultBranch"}]
- :gates [{:name "DepsPushToDefaultBranch"
-          :and [{:name "DepsPushToDefaultBranch"}]}]}
+    :image "gcr.io/atomist-container-skills/lein-deps-tree-skill"}]}}

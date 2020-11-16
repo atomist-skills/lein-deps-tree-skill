@@ -23,6 +23,15 @@
             [clojure.string :as str])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
+(defn create-ref-from-event
+  [handler]
+  (fn [request]
+    (let [[org commit repo] (-> request :subscription :result first)]
+      (handler (assoc request :ref {:repo (:git.repo/name repo)
+                                    :owner (:git.org/name org)
+                                    :sha (:git.commit/sha commit)}
+                              :token (:github.org/installation-token org))))))
+
 (defn -js->clj+
   "For cases when built-in js->clj doesn't work. Source: https://stackoverflow.com/a/32583549/4839573"
   [x]
@@ -31,51 +40,34 @@
 (defn run-deps-tree [handler]
   (fn [request]
     (go
-      (let [ATM-HOME (.. js/process -env -ATOMIST_HOME)
-            atmhome (io/file ATM-HOME)]
-        (if (and (.exists atmhome) (.exists (io/file atmhome "project.clj")))
-          (let [[err stdout stderr] (<! (proc/aexec "lein deps :tree-data" {:cwd (.getPath atmhome)
-                                                                            :env (-> (-js->clj+ (.. js/process -env))
-                                                                                     (merge
-                                                                                      {"MVN_ARTIFACTORYMAVENREPOSITORY_USER"
-                                                                                       (.. js/process -env -MVN_ARTIFACTORYMAVENREPOSITORY_USER)
-                                                                                       "MVN_ARTIFACTORYMAVENREPOSITORY_PWD"
-                                                                                       (.. js/process -env -MVN_ARTIFACTORYMAVENREPOSITORY_PWD)
-                                                                                       ;; use atm-home for .m2 directory
-                                                                                       "_JAVA_OPTIONS" (str "-Duser.home=" atm-home)}))}))]
-            (cond
+      (let [cwd (io/file (-> request :project :path))]
+        (let [[err stdout stderr] (<! (proc/aexec "lein deps :tree-data" {:cwd (.getPath cwd)
+                                                                          :env (-> (-js->clj+ (.. js/process -env))
+                                                                                   (merge
+                                                                                    {"MVN_ARTIFACTORYMAVENREPOSITORY_USER"
+                                                                                     (.. js/process -env -MVN_ARTIFACTORYMAVENREPOSITORY_USER)
+                                                                                     "MVN_ARTIFACTORYMAVENREPOSITORY_PWD"
+                                                                                     (.. js/process -env -MVN_ARTIFACTORYMAVENREPOSITORY_PWD)
+                                                                                     ;; use atm-home for .m2 directory
+                                                                                     "_JAVA_OPTIONS" (str "-Duser.home=" (.. js/process -env -ATOMIST_HOME))}))}))]
+          (cond
 
-              err
-              (do
-                (log/warnf "Error running lein deps: %s" stderr)
-                (<! (api/finish request :failure (str "Error running lein deps: " stderr))))
+            err
+            (do
+              (log/warnf "Error running lein deps: %s" stderr)
+              (<! (api/finish request :failure (str "Error running lein deps: " stderr))))
 
-              (str/includes? stderr "Possibly confusing dependencies found:")
-              (<! (handler (assoc request
-                                  :checkrun/conclusion "failure"
-                                  :checkrun/output {:title "lein deps :tree failure"
-                                                    :summary stderr})))
+            (str/includes? stderr "Possibly confusing dependencies found:")
+            (<! (handler (assoc request
+                           :checkrun/conclusion "failure"
+                           :checkrun/output {:title "lein deps :tree failure"
+                                             :summary stderr})))
 
-              :else
-              (<! (handler (assoc request
-                                  :checkrun/conclusion "success"
-                                  :checkrun/output {:title "lein deps :tree success"
-                                                    :summary "No confusing dependencies found"})))))
-          (do
-            (log/warn "there was no checked out " (.getPath atmhome))
-            (<! (api/finish request :failure "Failed to checkout"))))))))
-
-(defn cancel-if-not-lein [handler]
-  (fn [request]
-    (go
-      (let [atmhome (io/file (.. js/process -env -ATOMIST_HOME))]
-        (if (.exists atmhome)
-          (if (.exists (io/file atmhome "project.clj"))
-            (<! (handler request))
-            (<! (api/finish request :success "Skipping non-lein project" :visibility :hidden)))
-          (do
-            (log/warn "there was no checked out " (.getPath atmhome))
-            (<! (api/finish request :failure "Failed to checkout"))))))))
+            :else
+            (<! (handler (assoc request
+                           :checkrun/conclusion "success"
+                           :checkrun/output {:title "lein deps :tree success"
+                                             :summary "No confusing dependencies found"})))))))))
 
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
@@ -84,11 +76,9 @@
   ((-> (api/finished :message "----> Push event handler finished"
                      :success "completed line-deps-tree-skill")
        (run-deps-tree)
+       (api/clone-ref)
+       (create-ref-from-event)
        (api/with-github-check-run :name "lein-deps-tree-skill")
-       (cancel-if-not-lein)
-       (api/extract-github-token)
-       (api/create-ref-from-event)
-       (api/skip-push-if-atomist-edited)
        (api/status)
        (container/mw-make-container-request))
    {}))

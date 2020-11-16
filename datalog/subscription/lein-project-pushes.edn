@@ -1,0 +1,26 @@
+[:find (pull ?org [:github.org/installation-token
+                   :git.org/name
+                   :git.provider/url])
+ (pull ?commit [:git.commit/sha])
+ (pull ?repo [:git.repo/source-id
+              :git.repo/name
+              :git.provider/url])
+ :in $ $before-db %
+ :where
+ (or-join [?commit]
+    (tx-content-index ?commit _)
+    (tx-push ?commit _))
+
+ ;; ensures we are at  the tip of the default branch
+ [?ref :git.ref/commit ?commit]
+ [?commit :git.commit/repo ?repo]
+ (is-default-branch? ?ref)
+
+ (repo-selected? ?repo)
+
+ (repo-language ?repo "Clojure")
+
+ (content-index-contains? ?commit "path-exists" ["project.clj"])
+
+ [?commit :git.commit/repo ?repo]
+ [?repo :git.repo/org ?org]]
