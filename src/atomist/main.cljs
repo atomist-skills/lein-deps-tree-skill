@@ -30,7 +30,7 @@
       (handler (assoc request :ref {:repo (:git.repo/name repo)
                                     :owner (:git.org/name org)
                                     :sha (:git.commit/sha commit)}
-                              :token (:github.org/installation-token org))))))
+                      :token (:github.org/installation-token org))))))
 
 (defn -js->clj+
   "For cases when built-in js->clj doesn't work. Source: https://stackoverflow.com/a/32583549/4839573"
@@ -59,15 +59,15 @@
 
             (str/includes? stderr "Possibly confusing dependencies found:")
             (<! (handler (assoc request
-                           :checkrun/conclusion "failure"
-                           :checkrun/output {:title "lein deps :tree failure"
-                                             :summary stderr})))
+                                :checkrun/conclusion "failure"
+                                :checkrun/output {:title "lein deps :tree failure"
+                                                  :summary stderr})))
 
             :else
             (<! (handler (assoc request
-                           :checkrun/conclusion "success"
-                           :checkrun/output {:title "lein deps :tree success"
-                                             :summary "No confusing dependencies found"})))))))))
+                                :checkrun/conclusion "success"
+                                :checkrun/output {:title "lein deps :tree success"
+                                                  :summary "No confusing dependencies found"})))))))))
 
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
