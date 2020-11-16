@@ -8,7 +8,7 @@
  :in $ $before-db %
  :where
 
- [(ground ["paths-exist"]) ?paths-exist]
+ [(ground ["project.clj"]) ?paths-exist]
  (or-join [?commit ?paths-exist]
      (and
          ;; ensure that if content indexing triggers, that it only does so if all things are present
