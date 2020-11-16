@@ -8,13 +8,13 @@
  :in $ $before-db %
  :where
 
- [(ground ["project.clj"]) ?paths-exist]
- (or-join [?commit ?paths-exist]
+ [(ground ["project.clj"]) ?path-exists]
+ (or-join [?commit ?path-exists]
      (and
          ;; ensure that if content indexing triggers, that it only does so if all things are present
          (tx-content-index ?commit ?index)
          [?index :atomist.content.index/name "path-exists"]
-         [?index :atomist.content.index/value ?paths-exist])
+         [?index :atomist.content.index/value ?path-exists])
      (tx-push ?commit _))
 
  ;; ensures we are at  the tip of the default branch
@@ -26,7 +26,7 @@
 
  (repo-language ?repo "Clojure")
 
- (content-index-contains? ?commit "path-exists" ?paths-exist)
+ (content-index-contains? ?commit "path-exists" ?path-exists)
 
  [?commit :git.commit/repo ?repo]
  [?repo :git.repo/org ?org]]
