@@ -7,9 +7,14 @@
               :git.provider/url])
  :in $ $before-db %
  :where
- (or-join [?commit]
-    (tx-content-index ?commit _)
-    (tx-push ?commit _))
+
+ [(ground ["paths-exist"]) ?paths-exist]
+ (or-join [?commit ?paths-exist]
+     (and
+         ;; ensure that if content indexing triggers, that it only does so if all things are present
+         (tx-content-index ?commit ?index)
+         (content-index-contains? ?commit "path-exists" ?paths-exist))
+     (tx-push ?commit _))
 
  ;; ensures we are at  the tip of the default branch
  [?ref :git.ref/commit ?commit]
@@ -20,7 +25,7 @@
 
  (repo-language ?repo "Clojure")
 
- (content-index-contains? ?commit "path-exists" ["project.clj"])
+ (content-index-contains? ?commit "path-exists" ?paths-exist)
 
  [?commit :git.commit/repo ?repo]
  [?repo :git.repo/org ?org]]
