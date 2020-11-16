@@ -13,7 +13,8 @@
      (and
          ;; ensure that if content indexing triggers, that it only does so if all things are present
          (tx-content-index ?commit ?index)
-         (content-index-contains? ?commit "path-exists" ?paths-exist))
+         [?fp :atomist.content.index/name "path-exists"]
+         [?index :atomist.content.index/value ?paths-exist])
      (tx-push ?commit _))
 
  ;; ensures we are at  the tip of the default branch
