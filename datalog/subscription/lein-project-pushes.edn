@@ -20,7 +20,7 @@
    (array-contains? ["lein-deps-tree-skill"] ?check-name))
 
  ;; ensures we are at  the tip of the default branch
- [?ref :git.ref/commit ?commit]
+ [_ :git.ref/commit ?commit]
  [?commit :git.commit/repo ?repo]
 
  (repo-selected? ?repo)
