@@ -16,6 +16,7 @@
   (:require [atomist.api :as api]
             [atomist.cljs-log :as log]
             [atomist.container :as container]
+            [goog.string :as gstring]
             [cljs-node-io.core :as io]
             [cljs-node-io.proc :as proc]
             [cljs.core.async :refer [<! >! chan timeout]]
@@ -30,7 +31,7 @@
       (handler (assoc request :ref {:repo (:git.repo/name repo)
                                     :owner (:git.org/name org)
                                     :sha (:git.commit/sha commit)}
-                      :token (:github.org/installation-token org))))))
+                              :token (:github.org/installation-token org))))))
 
 (defn -js->clj+
   "For cases when built-in js->clj doesn't work. Source: https://stackoverflow.com/a/32583549/4839573"
@@ -59,15 +60,17 @@
 
             (str/includes? stderr "Possibly confusing dependencies found:")
             (<! (handler (assoc request
-                                :checkrun/conclusion "failure"
-                                :checkrun/output {:title "lein deps :tree failure"
-                                                  :summary stderr})))
+                           :atomist/summary (gstring/format "Possibly confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
+                           :checkrun/conclusion "failure"
+                           :checkrun/output {:title "lein deps :tree failure"
+                                             :summary stderr})))
 
             :else
             (<! (handler (assoc request
-                                :checkrun/conclusion "success"
-                                :checkrun/output {:title "lein deps :tree success"
-                                                  :summary "No confusing dependencies found"})))))))))
+                           :atomist/summary (gstring/format "No confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
+                           :checkrun/conclusion "success"
+                           :checkrun/output {:title "lein deps :tree success"
+                                             :summary "No confusing dependencies found"})))))))))
 
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
@@ -79,6 +82,6 @@
        (api/clone-ref)
        (api/with-github-check-run :name "lein-deps-tree-skill")
        (create-ref-from-event)
-       (api/status)
+       (api/status :send-status (fn [{:atomist/keys [summary]}] summary))
        (container/mw-make-container-request))
    {}))
