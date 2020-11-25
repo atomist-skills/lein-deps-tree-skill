@@ -21,7 +21,8 @@
             [cljs-node-io.proc :as proc]
             [cljs.core.async :refer [<! >! chan timeout]]
             [cljs.pprint :refer [pprint]]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [clojure.edn :as edn])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn create-ref-from-event
@@ -37,6 +38,47 @@
   "For cases when built-in js->clj doesn't work. Source: https://stackoverflow.com/a/32583549/4839573"
   [x]
   (into {} (for [k (js-keys x)] [k (aget x k)])))
+
+(defn ->tx
+  "Add each dep to a new commit for the `many`"
+  [commit-tx dep]
+  (let [group-and-name (str (first dep))
+        [group artifact-name] (str/split group-and-name #"/")
+        ;; for clojure where sometimes group is same as artifact
+        artifact-name (or artifact-name group)
+        version (second dep)
+        entity-id (str group-and-name ":" version)]
+    (log/infof "Adding %s/%s:%s to tx" group artifact-name version)
+    [{:schema/entity-type :maven/artifact
+      :maven.artifact/version version
+      :maven.artifact/group group
+      :maven.artifact/name artifact-name
+      :schema/entity entity-id}
+     (assoc commit-tx :project.dependencies/maven entity-id)]))
+
+(defn transact-deps
+  [request std-out]
+  (go
+    (try
+      (let [[org commit repo] (-> request :subscription :result first)
+            commit-tx {:schema/entity-type :git/commit
+                       :schema/entity "$commit"
+                       :git.provider/url (:git.provider/url org)
+                       :git.commit/sha (:git.commit/sha commit)
+                       :git.commit/repo "$repo"}]
+        (<! (->>
+             std-out
+             edn/read-string
+             (map first)
+             (map #(take 2 %))
+             (mapcat (partial ->tx commit-tx))
+             (concat [{:schema/entity-type :git/repo
+                       :schema/entity "$repo"
+                       :git.provider/url (:git.provider/url org)
+                       :git.repo/source-id (:git.repo/source-id repo)}])
+             (api/transact request))))
+      (catch :default ex
+        (log/error "Error transacting deps: " ex)))))
 
 (defn run-deps-tree [handler]
   (fn [request]
@@ -66,11 +108,13 @@
                                                   :summary stderr})))
 
             :else
-            (<! (handler (assoc request
-                                :atomist/summary (gstring/format "No confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
-                                :checkrun/conclusion "success"
-                                :checkrun/output {:title "lein deps :tree success"
-                                                  :summary "No confusing dependencies found"})))))))))
+            (do
+              (<! (transact-deps request stdout))
+              (<! (handler (assoc request
+                             :atomist/summary (gstring/format "No confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
+                             :checkrun/conclusion "success"
+                             :checkrun/output {:title "lein deps :tree success"
+                                               :summary "No confusing dependencies found"}))))))))))
 
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
