@@ -1,0 +1,39 @@
+{:attributes [
+              ;;
+              ;; generic maven stuff
+              ;;
+
+              {:db/ident :maven/artifact
+               :db.entity/attrs [:maven.artifact/group :maven.artifact/name :maven.artifact/version]}
+
+              {:db/ident :maven.artifact/group
+               :db/valueType :db.type/string
+               :db/cardinality :db.cardinality/one}
+
+              {:db/ident :maven.artifact/name
+               :db/valueType :db.type/string
+               :db/cardinality :db.cardinality/one}
+
+              {:db/ident :maven.artifact/version
+               :db/valueType :db.type/string
+               :db/cardinality :db.cardinality/one}
+
+              ;; reference to the commit from which this was built (e.g. common-clj)
+              {:db/ident :maven.artifact/commit
+               :db/valueType :db.type/ref
+               :db/cardinality :db.cardinality/one}
+
+              ;; describes a project in a super abstract way
+              ;; we could add more things later (e.g. lein, deps, npm etc)
+              {:db/ident :project/dependencies
+               :db.entity/attrs [:schema/random-guid]}
+
+              ;; commit that contains this project
+              {:db/ident :project.dependencies/commit
+               :db/valueType :db.type/ref
+               :db/cardinality :db.cardinality/one}
+
+              ;; direct maven dependencies
+              {:db/ident :project.dependencies/maven
+               :db/valueType :db.type/ref
+               :db/cardinality :db.cardinality/many}]}

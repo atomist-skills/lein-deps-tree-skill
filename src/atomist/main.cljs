@@ -21,7 +21,8 @@
             [cljs-node-io.proc :as proc]
             [cljs.core.async :refer [<! >! chan timeout]]
             [cljs.pprint :refer [pprint]]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [clojure.edn :as edn])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn create-ref-from-event
@@ -37,6 +38,31 @@
   "For cases when built-in js->clj doesn't work. Source: https://stackoverflow.com/a/32583549/4839573"
   [x]
   (into {} (for [k (js-keys x)] [k (aget x k)])))
+
+(defn ->tx
+  [dep]
+  )
+
+(defn transact-deps
+  [request std-out]
+  (go
+    (let [[org commit repo] (-> request :subscription :result first)]
+      (<! (->>
+           std-out
+           edn/read-string
+           (map first)
+           (map #(take 2 %))
+           (map ->tx)
+           (concat [{:schema/entity-type :git/commit
+                     :schema/entity "$commit"
+                     :git.provider/url (:git.provider/url org)
+                     :git.commit/sha (:git.commit/sha commit)
+                     :git.commit/repo "$repo"}
+                    {:schema/entity-type :git/repo
+                     :schema/entity "$repo"
+                     :git.provider/url (:git.provider/url org)
+                     :git.repo/source-id (:git.repo/source-id repo)}])
+           (api/transact request))))))
 
 (defn run-deps-tree [handler]
   (fn [request]
