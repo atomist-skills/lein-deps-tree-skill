@@ -41,41 +41,42 @@
 
 (defn ->tx
   "Add each dep to a new commit for the `many`"
-  [commit-tx dep]
+  [dep]
   (let [group-and-name (str (first dep))
         [group artifact-name] (str/split group-and-name #"/")
         ;; for clojure where sometimes group is same as artifact
         artifact-name (or artifact-name group)
         version (second dep)
         entity-id (str group-and-name ":" version)]
-    (log/infof "Adding %s/%s:%s to tx" group artifact-name version)
-    [{:schema/entity-type :maven/artifact
-      :maven.artifact/version version
-      :maven.artifact/group group
-      :maven.artifact/name artifact-name
-      :schema/entity entity-id}
-     (assoc commit-tx :project.dependencies/maven entity-id)]))
+    (log/infof "Extracted dependency --> %s/%s:%s" group artifact-name version)
+    {:schema/entity-type :maven/artifact
+     :maven.artifact/version version
+     :maven.artifact/group group
+     :maven.artifact/name artifact-name
+     :schema/entity entity-id}))
 
 (defn transact-deps
   [request std-out]
   (go
     (try
       (let [[org commit repo] (-> request :subscription :result first)
-            commit-tx {:schema/entity-type :git/commit
-                       :git.provider/url (:git.provider/url org)
-                       :git.commit/sha (:git.commit/sha commit)
-                       :git.commit/repo "$repo"}]
-        (<! (->>
-             std-out
-             edn/read-string
-             (map first)
-             (map #(take 2 %))
-             (mapcat (partial ->tx commit-tx))
-             (concat [{:schema/entity-type :git/repo
-                       :schema/entity "$repo"
-                       :git.provider/url (:git.provider/url org)
-                       :git.repo/source-id (:git.repo/source-id repo)}])
-             (api/transact request))))
+            deps-tx (->>
+                     std-out
+                     edn/read-string
+                     (map first)
+                     (map #(take 2 %))
+                     (map ->tx))]
+
+        (<! (api/transact request (concat [{:schema/entity-type :git/repo
+                                            :schema/entity "$repo"
+                                            :git.provider/url (:git.provider/url org)
+                                            :git.repo/source-id (:git.repo/source-id repo)}
+                                           {:schema/entity-type :git/commit
+                                            :git.provider/url (:git.provider/url org)
+                                            :git.commit/sha (:git.commit/sha commit)
+                                            :project.dependencies/maven {:add (map :schema/entity deps-tx)}
+                                            :git.commit/repo "$repo"}]
+                                          deps-tx))))
       (catch :default ex
         (log/error "Error transacting deps: " ex)))))
 
