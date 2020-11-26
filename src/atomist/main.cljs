@@ -111,10 +111,10 @@
             (do
               (<! (transact-deps request stdout))
               (<! (handler (assoc request
-                             :atomist/summary (gstring/format "No confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
-                             :checkrun/conclusion "success"
-                             :checkrun/output {:title "lein deps :tree success"
-                                               :summary "No confusing dependencies found"}))))))))))
+                                  :atomist/summary (gstring/format "No confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
+                                  :checkrun/conclusion "success"
+                                  :checkrun/output {:title "lein deps :tree success"
+                                                    :summary "No confusing dependencies found"}))))))))))
 
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
