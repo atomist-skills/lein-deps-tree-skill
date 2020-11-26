@@ -62,7 +62,6 @@
     (try
       (let [[org commit repo] (-> request :subscription :result first)
             commit-tx {:schema/entity-type :git/commit
-                       :schema/entity "$commit"
                        :git.provider/url (:git.provider/url org)
                        :git.commit/sha (:git.commit/sha commit)
                        :git.commit/repo "$repo"}]
