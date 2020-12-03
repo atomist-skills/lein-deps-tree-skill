@@ -41,4 +41,8 @@
               ;; references maven/artifacts
               {:db/ident :project.dependencies/maven
                :db/valueType :db.type/ref
-               :db/cardinality :db.cardinality/many}]}
+               :db/cardinality :db.cardinality/many}
+
+              {:db/ident :project/version
+               :db/valueType :db.type/string
+               :db/cardinality :db.cardinality/one}]}

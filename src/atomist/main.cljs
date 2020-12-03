@@ -80,10 +80,31 @@
       (catch :default ex
         (log/error "Error transacting deps: " ex)))))
 
+(defn transact-project-version
+  [request]
+  (go
+    (try
+      (let [f (io/file (-> request :project :path))
+            [org commit repo] (-> request :subscription :result first)
+            version (nth (edn/read-string (io/slurp (io/file f "project.clj"))) 2)]
+        (<! (api/transact request [{:schema/entity-type :git/repo
+                                    :schema/entity "$repo"
+                                    :git.provider/url (:git.provider/url org)
+                                    :git.repo/source-id (:git.repo/source-id repo)}
+                                   {:schema/entity-type :git/commit
+                                    :schema/entity "$commit"
+                                    :git.provider/url (:git.provider/url org)
+                                    :project/version version
+                                    :git.commit/sha (:git.commit/sha commit)
+                                    :git.commit/repo "$repo"}])))
+      (catch :default ex
+        (log/error "Error transacting project version " ex)))))
+
 (defn run-deps-tree [handler]
   (fn [request]
     (go
       (let [cwd (io/file (-> request :project :path))]
+        (<! (transact-project-version request))
         (let [[err stdout stderr] (<! (proc/aexec "lein deps :tree-data" {:cwd (.getPath cwd)
                                                                           :env (-> (-js->clj+ (.. js/process -env))
                                                                                    (merge
