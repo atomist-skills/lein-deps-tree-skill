@@ -159,7 +159,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `argparse`                | `1.0.10`   |                     | [https://github.com/nodeca/argparse](https://github.com/nodeca/argparse)                                                                       |
 | `arrify`                  | `2.0.1`    | Sindre Sorhus       | [https://github.com/sindresorhus/arrify](https://github.com/sindresorhus/arrify)                                                               |
 | `balanced-match`          | `1.0.0`    | Julian Gruber       | [https://github.com/juliangruber/balanced-match](https://github.com/juliangruber/balanced-match)                                               |
-| `base64-js`               | `1.3.1`    | T. Jameson Little   | [https://github.com/beatgammit/base64-js](https://github.com/beatgammit/base64-js)                                                             |
+| `base64-js`               | `1.5.1`    | T. Jameson Little   | [https://github.com/beatgammit/base64-js](https://github.com/beatgammit/base64-js)                                                             |
 | `bignumber.js`            | `9.0.1`    | Michael Mclaughlin  | [https://github.com/MikeMcl/bignumber.js](https://github.com/MikeMcl/bignumber.js)                                                             |
 | `brace-expansion`         | `1.1.11`   | Julian Gruber       | [https://github.com/juliangruber/brace-expansion](https://github.com/juliangruber/brace-expansion)                                             |
 | `braces`                  | `3.0.2`    | Jon Schlinkert      | [https://github.com/micromatch/braces](https://github.com/micromatch/braces)                                                                   |
@@ -238,7 +238,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `retry-request`           | `4.1.3`    | Stephen Sawchuk     | [https://github.com/stephenplusplus/retry-request](https://github.com/stephenplusplus/retry-request)                                           |
 | `reusify`                 | `1.0.4`    | Matteo Collina      | [https://github.com/mcollina/reusify](https://github.com/mcollina/reusify)                                                                     |
 | `run-parallel`            | `1.1.10`   | Feross Aboukhadijeh | [https://github.com/feross/run-parallel](https://github.com/feross/run-parallel)                                                               |
-| `safe-buffer`             | `5.1.2`    | Feross Aboukhadijeh | [https://github.com/feross/safe-buffer](https://github.com/feross/safe-buffer)                                                                 |
+| `safe-buffer`             | `5.2.1`    | Feross Aboukhadijeh | [https://github.com/feross/safe-buffer](https://github.com/feross/safe-buffer)                                                                 |
 | `safer-buffer`            | `2.1.2`    | Nikita Skovoroda    | [https://github.com/ChALkeR/safer-buffer](https://github.com/ChALkeR/safer-buffer)                                                             |
 | `shell-quote`             | `1.7.2`    | James Halliday      | [https://github.com/substack/node-shell-quote](https://github.com/substack/node-shell-quote)                                                   |
 | `snakecase-keys`          | `3.2.1`    | Ben Drucker         | [https://github.com/bendrucker/snakecase-keys](https://github.com/bendrucker/snakecase-keys)                                                   |
@@ -246,7 +246,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `stream-events`           | `1.0.5`    | Stephen Sawchuk     | [https://github.com/stephenplusplus/stream-events](https://github.com/stephenplusplus/stream-events)                                           |
 | `stream-shift`            | `1.0.1`    | Mathias Buus        | [https://github.com/mafintosh/stream-shift](https://github.com/mafintosh/stream-shift)                                                         |
 | `string-width`            | `4.2.0`    | Sindre Sorhus       | [https://github.com/sindresorhus/string-width](https://github.com/sindresorhus/string-width)                                                   |
-| `string_decoder`          | `1.1.1`    |                     | [https://github.com/nodejs/string_decoder](https://github.com/nodejs/string_decoder)                                                           |
+| `string_decoder`          | `1.3.0`    |                     | [https://github.com/nodejs/string_decoder](https://github.com/nodejs/string_decoder)                                                           |
 | `strip-ansi`              | `6.0.0`    | Sindre Sorhus       | [https://github.com/chalk/strip-ansi](https://github.com/chalk/strip-ansi)                                                                     |
 | `stubs`                   | `3.0.0`    | Stephen Sawchuk     | [https://github.com/stephenplusplus/stubs](https://github.com/stephenplusplus/stubs)                                                           |
 | `through2`                | `4.0.2`    | Rod Vagg            | [https://github.com/rvagg/through2](https://github.com/rvagg/through2)                                                                         |
@@ -270,7 +270,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 
 | Name                | Version   | Publisher       | Repository |
 | ------------------- | --------- | --------------- | ---------- |
-| `@atomist/api-cljs` | `0.4.143` | jim@atomist.com |            |
+| `@atomist/api-cljs` | `0.4.144` | jim@atomist.com |            |
 
 ## Contact
 
