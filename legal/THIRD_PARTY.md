@@ -47,7 +47,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `eventid`                             | `1.0.0`      | Google Inc.           | [https://github.com/google/eventid-js](https://github.com/google/eventid-js)                                                     |
 | `fast-text-encoding`                  | `1.0.3`      | Sam Thorogood         | [https://github.com/samthor/fast-text-encoding](https://github.com/samthor/fast-text-encoding)                                   |
 | `gaxios`                              | `3.2.0`      | Google, LLC           | [https://github.com/googleapis/gaxios](https://github.com/googleapis/gaxios)                                                     |
-| `gaxios`                              | `4.0.1`      | Google, LLC           | [https://github.com/googleapis/gaxios](https://github.com/googleapis/gaxios)                                                     |
+| `gaxios`                              | `4.1.0`      | Google, LLC           | [https://github.com/googleapis/gaxios](https://github.com/googleapis/gaxios)                                                     |
 | `gcp-metadata`                        | `4.2.1`      | Stephen Sawchuk       | [https://github.com/googleapis/gcp-metadata](https://github.com/googleapis/gcp-metadata)                                         |
 | `google-auth-library`                 | `6.1.3`      | Google Inc.           | [https://github.com/googleapis/google-auth-library-nodejs](https://github.com/googleapis/google-auth-library-nodejs)             |
 | `google-gax`                          | `2.9.2`      | Google API Authors    | [https://github.com/googleapis/gax-nodejs](https://github.com/googleapis/gax-nodejs)                                             |
@@ -151,7 +151,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `@types/duplexify`        | `3.6.0`    |                     | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
 | `@types/long`             | `4.0.1`    |                     | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
 | `@types/node`             | `12.19.8`  |                     | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
-| `@types/node`             | `13.13.34` |                     | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
+| `@types/node`             | `13.13.35` |                     | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                       |
 | `abort-controller`        | `3.0.0`    | Toru Nagashima      | [https://github.com/mysticatea/abort-controller](https://github.com/mysticatea/abort-controller)                                               |
 | `agent-base`              | `6.0.2`    | Nathan Rajlich      | [https://github.com/TooTallNate/node-agent-base](https://github.com/TooTallNate/node-agent-base)                                               |
 | `ansi-regex`              | `5.0.0`    | Sindre Sorhus       | [https://github.com/chalk/ansi-regex](https://github.com/chalk/ansi-regex)                                                                     |
@@ -260,7 +260,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `unique-string`           | `2.0.0`    | Sindre Sorhus       | [https://github.com/sindresorhus/unique-string](https://github.com/sindresorhus/unique-string)                                                 |
 | `util-deprecate`          | `1.0.2`    | Nathan Rajlich      | [https://github.com/TooTallNate/util-deprecate](https://github.com/TooTallNate/util-deprecate)                                                 |
 | `uuid`                    | `3.4.0`    |                     | [https://github.com/uuidjs/uuid](https://github.com/uuidjs/uuid)                                                                               |
-| `uuid`                    | `8.3.1`    |                     | [https://github.com/uuidjs/uuid](https://github.com/uuidjs/uuid)                                                                               |
+| `uuid`                    | `8.3.2`    |                     | [https://github.com/uuidjs/uuid](https://github.com/uuidjs/uuid)                                                                               |
 | `wrap-ansi`               | `6.2.0`    | Sindre Sorhus       | [https://github.com/chalk/wrap-ansi](https://github.com/chalk/wrap-ansi)                                                                       |
 | `xdg-basedir`             | `4.0.0`    | Sindre Sorhus       | [https://github.com/sindresorhus/xdg-basedir](https://github.com/sindresorhus/xdg-basedir)                                                     |
 | `yargs`                   | `15.4.1`   |                     | [https://github.com/yargs/yargs](https://github.com/yargs/yargs)                                                                               |
@@ -270,7 +270,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 
 | Name                | Version   | Publisher       | Repository |
 | ------------------- | --------- | --------------- | ---------- |
-| `@atomist/api-cljs` | `0.4.144` | jim@atomist.com |            |
+| `@atomist/api-cljs` | `0.4.146` | jim@atomist.com |            |
 
 ## Contact
 
