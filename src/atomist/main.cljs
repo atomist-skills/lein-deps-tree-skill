@@ -61,7 +61,9 @@
   [request std-out]
   (go
     (try
-      (let [[org commit repo] (-> request :subscription :result first)
+      (let [[commit] (-> request :subscription :result first)
+            repo (:git.commit/repo commit)
+            org (:git.repo/org repo)
             deps-tx (->>
                      std-out
                      edn/read-string
@@ -87,7 +89,9 @@
   (go
     (try
       (let [f (io/file (-> request :project :path))
-            [org commit repo] (-> request :subscription :result first)
+            [commit] (-> request :subscription :result first)
+            repo (:git.commit/repo commit)
+            org (:git.repo/org repo)
             version (nth (edn/read-string (io/slurp (io/file f "project.clj"))) 2)]
         (<! (api/transact request [{:schema/entity-type :git/repo
                                     :schema/entity "$repo"
