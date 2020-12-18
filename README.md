@@ -6,6 +6,9 @@ This skill creates a GitHub check with a success status if there are no
 confusing dependencies when `lein deps :tree` is run, or a failure status
 otherwise
 
+It also indexes all the dependencies in a project and attaches them to the
+commit
+
 ## Why?
 
 Dependencies in lein can have clashing transitive dependencies which can lead to
