@@ -49,10 +49,9 @@
     :description "Cache and restore file system content between executions of this skill",
     :required false}}
   {:fileFilter
-   {:name "paths-exists"
-    :description "Paths to index and that must be present"
+   {:name "paths-to-index"
+    :description "Paths to index"
     :visibility "hidden"
-    :usage "includes"
     :defaultValue ["project.clj"]
     :required false}}
   {:repoFilter
