@@ -7,6 +7,7 @@
                                                          :git.provider/url]}]}])
  :in $ $before-db %
  :where
- (tx-push-with-content [] false ["project.clj"] [] ?commit)
+ (get-config-value "paths-exist" [] ?paths-exist)
+ (tx-push-with-content [] false ?paths-exist [] ?commit)
  [?commit :git.commit/repo ?repo]
  (repo-language ?repo "Clojure")]

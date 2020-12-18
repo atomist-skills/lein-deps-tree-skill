@@ -153,6 +153,7 @@
        (api/clone-ref)
        (api/with-github-check-run :name "lein-deps-tree-skill")
        (create-ref-from-event)
+       (api/log-event)
        (api/status :send-status (fn [{:atomist/keys [summary]}] summary))
        (container/mw-make-container-request))
    {}))
