@@ -1,0 +1,18 @@
+[:find (pull ?commit [:git.commit/sha
+                      {:git.commit/repo [:git.repo/source-id
+                                         :git.repo/name
+                                         :git.provider/url
+                                         {:git.repo/org [:github.org/installation-token
+                                                         :git.org/name
+                                                         :git.provider/url]}]}])
+ (pull ?maven-repo [:maven.repository/url
+                    :maven.repository/secret
+                    :maven.repository/username
+                    :maven.repository/repository-id])
+ ?usage
+ :in $ $before-db %
+ :where
+ (tx-push-with-content [] false ["project.clj"] [] ?commit)
+ [?commit :git.commit/repo ?repo]
+ (repo-language ?repo "Clojure")
+ (capability-configuration "atomist" "MavenRepository" ?usage ?maven-repo)]
