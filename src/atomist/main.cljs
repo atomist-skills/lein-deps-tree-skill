@@ -126,7 +126,7 @@
         (io/spit
          (io/file (-> request :project :path) "profiles.clj")
          (pr-str
-          {:lein-m2-deploy
+          {:lein-deps-tree
            (merge
             {:repositories (->> (:resolve repo-map)
                                 (map (fn [{:maven.repository/keys [repository-id url username secret]}]
@@ -144,7 +144,7 @@
     (go
       (let [cwd (io/file (-> request :project :path))]
         (<! (transact-project-version request))
-        (let [[err stdout stderr] (<! (proc/aexec "lein with-profile lein-deps-tree-skill deps :tree-data"
+        (let [[err stdout stderr] (<! (proc/aexec "lein with-profile lein-deps-tree deps :tree-data"
                                                   {:cwd (.getPath cwd)
                                                    :env (-> (-js->clj+ (.. js/process -env))
                                                             (merge
