@@ -20,25 +20,19 @@
    :description "GitHub",
    :typeName "GitHubAppResourceProvider",
    :minRequired 1,
-   :maxAllowed 1}
-  {:name "maven",
-   :description "Maven repository for resolving artifects referenced in project.clj",
-   :typeName "MavenRepositoryProvider",
-   :minRequired 0,
-   :maxAllowed 1}
-  ],
+   :maxAllowed 1}],
  :displayName "Lein Dependency Tree",
  :name "lein-deps-tree",
  :author "Atomist",
  :dispatchStyle "single",
  :iconUrl "https://leiningen.org/img/leiningen.jpg",
  :homepageUrl "https://github.com/atomist-skills/lein-deps-tree-skill",
-
  :capabilities {:requires [{:name "MavenRepository"
                             :namespace "atomist"
                             :displayName "Maven Repository"
                             :description "Maven Repository for dependency resolution"
                             :minRequired 0
+                            :usage "resolve"
                             :scopes ["ingestion" "configuration"]}]}
  :parameters
  [{:stringArray

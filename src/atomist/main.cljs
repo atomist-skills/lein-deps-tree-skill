@@ -34,7 +34,7 @@
       (handler (assoc request :ref {:repo (:git.repo/name repo)
                                     :owner (:git.org/name org)
                                     :sha (:git.commit/sha commit)}
-                      :token (:github.org/installation-token org))))))
+                              :token (:github.org/installation-token org))))))
 
 (defn -js->clj+
   "For cases when built-in js->clj doesn't work. Source: https://stackoverflow.com/a/32583549/4839573"
@@ -106,20 +106,51 @@
       (catch :default ex
         (log/error "Error transacting project version " ex)))))
 
+(defn add-profile
+  [handler]
+  (fn [request]
+    (go
+      (let [repo-map (reduce
+                      (fn [acc [_ repo usage]]
+                        (if (and repo usage)
+                          (update acc (keyword usage) (fn [repos]
+                                                        (conj (or repos []) repo)))
+                          acc))
+                      {}
+                      (-> request :subscription :result))]
+        (log/infof "Found resolve integration: %s"
+                   (->> (:resolve repo-map)
+                        (map #(gstring/format "%s - %s" (:maven.repository/repository-id %) (:maven.repository/url %)))
+                        (str/join ", ")))
+
+        (io/spit
+         (io/file (-> request :project :path) "profiles.clj")
+         (pr-str
+          {:lein-m2-deploy
+           (merge
+            {:repositories (->> (:resolve repo-map)
+                                (map (fn [{:maven.repository/keys [repository-id url username secret]}]
+                                       [repository-id {:url url
+                                                       :username username
+                                                       :password secret}]))
+                                (into []))}
+            ;; if the root project does not specify a url then add one to the profile
+            (when-not (-> request :atomist.leiningen/non-evaled-project-map :url)
+              {:url (gstring/format "https://github.com/%s/%s" (-> request :ref :owner) (-> request :ref :repo))}))}))
+        (<! (handler request))))))
+
 (defn run-deps-tree [handler]
   (fn [request]
     (go
       (let [cwd (io/file (-> request :project :path))]
         (<! (transact-project-version request))
-        (let [[err stdout stderr] (<! (proc/aexec "lein deps :tree-data" {:cwd (.getPath cwd)
-                                                                          :env (-> (-js->clj+ (.. js/process -env))
-                                                                                   (merge
-                                                                                    {"MVN_ARTIFACTORYMAVENREPOSITORY_USER"
-                                                                                     (.. js/process -env -MVN_ARTIFACTORYMAVENREPOSITORY_USER)
-                                                                                     "MVN_ARTIFACTORYMAVENREPOSITORY_PWD"
-                                                                                     (.. js/process -env -MVN_ARTIFACTORYMAVENREPOSITORY_PWD)
-                                                                                     ;; use atm-home for .m2 directory
-                                                                                     "_JAVA_OPTIONS" (str "-Duser.home=" (.. js/process -env -ATOMIST_HOME))}))}))]
+        (let [[err stdout stderr] (<! (proc/aexec "lein with-profile lein-deps-tree-skill deps :tree-data"
+                                                  {:cwd (.getPath cwd)
+                                                   :env (-> (-js->clj+ (.. js/process -env))
+                                                            (merge
+                                                             {
+                                                              ;; use atm-home for .m2 directory
+                                                              "_JAVA_OPTIONS" (str "-Duser.home=" (.. js/process -env -ATOMIST_HOME))}))}))]
           (cond
 
             err
@@ -129,19 +160,19 @@
 
             (str/includes? stderr "Possibly confusing dependencies found:")
             (<! (handler (assoc request
-                                :atomist/summary (gstring/format "Possibly confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
-                                :checkrun/conclusion "failure"
-                                :checkrun/output {:title "lein deps :tree failure"
-                                                  :summary stderr})))
+                           :atomist/summary (gstring/format "Possibly confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
+                           :checkrun/conclusion "failure"
+                           :checkrun/output {:title "lein deps :tree failure"
+                                             :summary stderr})))
 
             :else
             (do
               (<! (transact-deps request stdout))
               (<! (handler (assoc request
-                                  :atomist/summary (gstring/format "No confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
-                                  :checkrun/conclusion "success"
-                                  :checkrun/output {:title "lein deps :tree success"
-                                                    :summary "No confusing dependencies found"}))))))))))
+                             :atomist/summary (gstring/format "No confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
+                             :checkrun/conclusion "success"
+                             :checkrun/output {:title "lein deps :tree success"
+                                               :summary "No confusing dependencies found"}))))))))))
 
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
@@ -150,6 +181,7 @@
   ((-> (api/finished :message "----> Push event handler finished"
                      :success "completed line-deps-tree-skill")
        (run-deps-tree)
+       (add-profile)
        (api/clone-ref)
        (api/with-github-check-run :name "lein-deps-tree-skill")
        (create-ref-from-event)
