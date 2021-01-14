@@ -9,4 +9,5 @@
  :where
  (tx-push-with-content [] false ["project.clj"] [] ?commit)
  [?commit :git.commit/repo ?repo]
- (repo-language ?repo "Clojure")]
+ (repo-language ?repo "Clojure")
+ (not (capability-configuration "atomist" "MavenRepository" ?usage ?maven-repo))]
