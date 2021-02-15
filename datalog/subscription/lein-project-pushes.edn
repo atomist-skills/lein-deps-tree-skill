@@ -10,5 +10,5 @@
  (tx-push-with-content [] false ["project.clj"] [] ?commit)
  [?commit :git.commit/repo ?repo]
  (repo-language ?repo "Clojure")
- (not-join [?maven-repo]
-   (capability-configuration "atomist" "MavenRepository" "resolve" ?maven-repo))]
+ (not-join []
+   (capability-configuration "atomist" "MavenRepository" "resolve" _))]
