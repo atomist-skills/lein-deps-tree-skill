@@ -19,11 +19,9 @@
             [goog.string :as gstring]
             [cljs-node-io.core :as io]
             [cljs-node-io.proc :as proc]
-            [cljs.core.async :refer [<! >! chan timeout]]
-            [cljs.pprint :refer [pprint]]
+            [atomist.async :refer-macros [<? go-safe]]
             [clojure.string :as str]
-            [clojure.edn :as edn])
-  (:require-macros [cljs.core.async.macros :refer [go]]))
+            [clojure.edn :as edn]))
 
 (defn create-ref-from-event
   [handler]
@@ -59,7 +57,7 @@
 
 (defn transact-deps
   [request std-out]
-  (go
+  (go-safe
     (try
       (let [[commit] (-> request :subscription :result first)
             repo (:git.commit/repo commit)
@@ -71,7 +69,7 @@
                      (map #(take 2 %))
                      (map ->tx))]
 
-        (<! (api/transact request (concat [{:schema/entity-type :git/repo
+        (<? (api/transact request (concat [{:schema/entity-type :git/repo
                                             :schema/entity "$repo"
                                             :git.provider/url (:git.provider/url org)
                                             :git.repo/source-id (:git.repo/source-id repo)}
@@ -86,14 +84,14 @@
 
 (defn transact-project-version
   [request]
-  (go
+  (go-safe
     (try
       (let [f (io/file (-> request :project :path))
             [commit] (-> request :subscription :result first)
             repo (:git.commit/repo commit)
             org (:git.repo/org repo)
             version (nth (edn/read-string (io/slurp (io/file f "project.clj"))) 2)]
-        (<! (api/transact request [{:schema/entity-type :git/repo
+        (<? (api/transact request [{:schema/entity-type :git/repo
                                     :schema/entity "$repo"
                                     :git.provider/url (:git.provider/url org)
                                     :git.repo/source-id (:git.repo/source-id repo)}
@@ -109,7 +107,7 @@
 (defn add-profile
   [handler]
   (fn [request]
-    (go
+    (go-safe
       (let [repo-map (reduce
                       (fn [acc [_ repo usage]]
                         (if (and repo usage)
@@ -137,14 +135,14 @@
             ;; if the root project does not specify a url then add one to the profile
             (when-not (-> request :atomist.leiningen/non-evaled-project-map :url)
               {:url (gstring/format "https://github.com/%s/%s" (-> request :ref :owner) (-> request :ref :repo))}))}))
-        (<! (handler request))))))
+        (<? (handler request))))))
 
 (defn run-deps-tree [handler]
   (fn [request]
-    (go
+    (go-safe
       (let [cwd (io/file (-> request :project :path))]
-        (<! (transact-project-version request))
-        (let [[err stdout stderr] (<! (proc/aexec "lein with-profile lein-deps-tree deps :tree-data"
+        (<? (transact-project-version request))
+        (let [[err stdout stderr] (<? (proc/aexec "lein with-profile lein-deps-tree deps :tree-data"
                                                   {:cwd (.getPath cwd)
                                                    :env (-> (-js->clj+ (.. js/process -env))
                                                             (merge
@@ -155,20 +153,22 @@
             err
             (do
               (log/warnf "Error running lein deps: %s" stderr)
-              (<! (api/finish request :failure (str "Error running lein deps: " stderr))))
+              (<? (api/finish request :failure (str "Error running lein deps: " stderr))))
 
             (str/includes? stderr "Possibly confusing dependencies found:")
-            (<! (handler (assoc request
-                                :atomist/summary (gstring/format "Possibly confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
+            (<? (handler (assoc request
                                 :checkrun/conclusion "failure"
                                 :checkrun/output {:title "lein deps :tree failure"
-                                                  :summary stderr})))
+                                                  :summary stderr}
+                                :atomist/status {:code 1
+                                                 :reason (gstring/format "Possibly confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))})))
 
             :else
             (do
-              (<! (transact-deps request stdout))
-              (<! (handler (assoc request
-                                  :atomist/summary (gstring/format "No confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))
+              (<? (transact-deps request stdout))
+              (<? (handler (assoc request
+                                  :atomist/status {:code 0
+                                                   :reason (gstring/format "No confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))}
                                   :checkrun/conclusion "success"
                                   :checkrun/output {:title "lein deps :tree success"
                                                     :summary "No confusing dependencies found"}))))))))))
@@ -177,14 +177,13 @@
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
    the context is extract fro the environment using the container/mw-make-container-request middleware"
   []
-  ((-> (api/finished :message "----> Push event handler finished"
-                     :success "completed line-deps-tree-skill")
+  ((-> (api/finished )
        (run-deps-tree)
        (add-profile)
        (api/clone-ref)
        (api/with-github-check-run :name "lein-deps-tree-skill")
        (create-ref-from-event)
        (api/log-event)
-       (api/status :send-status (fn [{:atomist/keys [summary]}] summary))
+       (api/status)
        (container/mw-make-container-request))
    {}))
