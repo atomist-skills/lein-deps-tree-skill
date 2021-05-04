@@ -134,7 +134,7 @@
                                 (into []))}
             (when-let [deps (not-empty (:gpg-verify-deps request))]
               {:gpg-verify {:deps (map symbol deps)}
-               :plugins  '[[org.kipz/clj-gpg-verify "0.1.1"]]})
+               :plugins  '[[org.kipz/clj-gpg-verify "0.1.2"]]})
             ;; if the root project does not specify a url then add one to the profile
             (when-not (-> request :atomist.leiningen/non-evaled-project-map :url)
               {:url (gstring/format "https://github.com/%s/%s" (-> request :ref :owner) (-> request :ref :repo))}))}))
