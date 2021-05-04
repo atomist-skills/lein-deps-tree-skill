@@ -15,7 +15,7 @@
 {:paths ["src"],
  :deps
  {org.clojure/clojurescript {:mvn/version "1.10.520"},
-  com.atomist/api-cljs {:mvn/version "0.5.37"}},
+  com.atomist/api-cljs {:mvn/version "0.5.53"}},
  :aliases
  {:dev
   {:extra-deps
@@ -46,9 +46,9 @@
     "src"
     "--namespace"
     "atomist.skill-meta"
-    "--formats" 
-    "cljs" 
-    "--without-sign" 
-    "--prefix" 
+    "--formats"
+    "cljs"
+    "--without-sign"
+    "--prefix"
     ":none"]}
   :build {:jvm-opts ["-Xmx2G" "-XX:+UnlockExperimentalVMOptions" "-XX:+PrintCommandLineFlags" "-XX:+UseCGroupMemoryLimitForHeap"]}}}

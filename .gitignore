@@ -1,4 +1,6 @@
 .idea/
+.lsp/
+.calva/
 .atomist/
 node_modules/
 *.iml

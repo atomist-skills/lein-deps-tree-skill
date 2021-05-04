@@ -1,6 +1,17 @@
-FROM gcr.io/atomist-container-skills/clojure-base:0.0.1@sha256:cd6e9de3de5b121dc7aef0cb3f6a1b58423049ce6db08fd7161cac7b39722f55
- 
-WORKDIR /usr/src/app  
+FROM gcr.io/atomist-container-skills/clojure-base:openjdk11
+
+RUN mkdir /opt/gpg
+
+RUN apt-get update && apt-get install -y --no-install-recommends gpg \
+ && apt-get clean \
+ && rm -rf /var/cache/apt /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+COPY pubring.kbx /opt/gpg
+COPY trustdb.gpg /opt/gpg
+
+ENV GNUPGHOME=/opt/gpg
+
+WORKDIR /usr/src/app
 
 COPY package*.json /usr/src/app/
 RUN npm ci
@@ -11,4 +22,4 @@ RUN npm run build
 ENTRYPOINT [ "node" ]
 CMD [ "index.js" ]
 
- 
+

@@ -124,7 +124,9 @@
         (io/spit
          (io/file (-> request :project :path) "profiles.clj")
          (pr-str
-          {:lein-deps-tree
+          {:gpg-verify {:deps '[atomist/common-clj]}
+           :plugins  '[[org.kipz/clj-gpg-verify "0.1.0"]]
+           :lein-deps-tree
            (merge
             {:repositories (->> (:resolve repo-map)
                                 (map (fn [{:maven.repository/keys [repository-id url username secret]}]
@@ -173,11 +175,38 @@
                                   :checkrun/output {:title "lein deps :tree success"
                                                     :summary "No confusing dependencies found"}))))))))))
 
+(defn run-gpg-verify [handler]
+  (fn [request]
+    (go-safe
+     (let [cwd (io/file (-> request :project :path))
+           [err stdout stderr] (<? (proc/aexec "lein with-profile lein-deps-tree gpg-verify"
+                                               {:cwd (.getPath cwd)
+                                                :env (-> (-js->clj+ (.. js/process -env))
+                                                         (merge
+                                                          {;; use atm-home for .m2 directory
+                                                           "GNUPGHOME" "/opt/gpg"
+                                                           "_JAVA_OPTIONS" (str "-Duser.home=" (.. js/process -env -ATOMIST_HOME))}))}))]
+       (if
+        err
+         (do
+           (log/warnf "Error running lein gpg-verify: %s" stderr)
+           (assoc request
+                  :checkrun/conclusion "failure"
+                  :checkrun/output {:title "lein gpg-verify failure"
+                                    :summary stderr}
+                  :atomist/status {:code 1
+                                   :reason "lein gpg-verify failure. Check logs for details"}))
+
+         (do
+           (log/infof "Successfully ran lein gpg-verify, continuing")
+           (<? (handler request))))))))
+
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
    the context is extract fro the environment using the container/mw-make-container-request middleware"
   []
   ((-> (api/finished )
+       (run-gpg-verify)
        (run-deps-tree)
        (add-profile)
        (api/clone-ref)
