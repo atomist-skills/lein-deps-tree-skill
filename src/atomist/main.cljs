@@ -124,21 +124,20 @@
         (io/spit
          (io/file (-> request :project :path) "profiles.clj")
          (pr-str
-          (merge
-           {:lein-deps-tree
-            (merge
-             {:repositories (->> (:resolve repo-map)
-                                 (map (fn [{:maven.repository/keys [repository-id url username secret]}]
-                                        [repository-id {:url url
-                                                        :username username
-                                                        :password secret}]))
-                                 (into []))}
+          {:lein-deps-tree
+           (merge
+            {:repositories (->> (:resolve repo-map)
+                                (map (fn [{:maven.repository/keys [repository-id url username secret]}]
+                                       [repository-id {:url url
+                                                       :username username
+                                                       :password secret}]))
+                                (into []))}
+            (when-let [deps (not-empty (:gpg-verify-deps request))]
+              {:gpg-verify {:deps (map symbol deps)}
+               :plugins  '[[org.kipz/clj-gpg-verify "0.1.0"]]})
             ;; if the root project does not specify a url then add one to the profile
-             (when-not (-> request :atomist.leiningen/non-evaled-project-map :url)
-               {:url (gstring/format "https://github.com/%s/%s" (-> request :ref :owner) (-> request :ref :repo))}))}
-           (when-let [deps (not-empty (:gpg-verify-deps request))]
-             {:gpg-verify {:deps (map symbol deps)}
-              :plugins  '[[org.kipz/clj-gpg-verify "0.1.0"]]}))))
+            (when-not (-> request :atomist.leiningen/non-evaled-project-map :url)
+              {:url (gstring/format "https://github.com/%s/%s" (-> request :ref :owner) (-> request :ref :repo))}))}))
         (<? (handler request))))))
 
 (defn run-deps-tree [handler]
