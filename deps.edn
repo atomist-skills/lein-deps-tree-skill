@@ -51,4 +51,4 @@
     "--without-sign"
     "--prefix"
     ":none"]}
-  :build {:jvm-opts ["-Xmx2G" "-XX:+UnlockExperimentalVMOptions" "-XX:+PrintCommandLineFlags" "-XX:+UseCGroupMemoryLimitForHeap"]}}}
+  :build {:jvm-opts ["-Xmx2G" "-XX:+UnlockExperimentalVMOptions" "-XX:+PrintCommandLineFlags"]}}}

@@ -124,19 +124,21 @@
         (io/spit
          (io/file (-> request :project :path) "profiles.clj")
          (pr-str
-          {:gpg-verify {:deps '[atomist/common-clj]}
-           :plugins  '[[org.kipz/clj-gpg-verify "0.1.0"]]
-           :lein-deps-tree
-           (merge
-            {:repositories (->> (:resolve repo-map)
-                                (map (fn [{:maven.repository/keys [repository-id url username secret]}]
-                                       [repository-id {:url url
-                                                       :username username
-                                                       :password secret}]))
-                                (into []))}
+          (merge
+           {:lein-deps-tree
+            (merge
+             {:repositories (->> (:resolve repo-map)
+                                 (map (fn [{:maven.repository/keys [repository-id url username secret]}]
+                                        [repository-id {:url url
+                                                        :username username
+                                                        :password secret}]))
+                                 (into []))}
             ;; if the root project does not specify a url then add one to the profile
-            (when-not (-> request :atomist.leiningen/non-evaled-project-map :url)
-              {:url (gstring/format "https://github.com/%s/%s" (-> request :ref :owner) (-> request :ref :repo))}))}))
+             (when-not (-> request :atomist.leiningen/non-evaled-project-map :url)
+               {:url (gstring/format "https://github.com/%s/%s" (-> request :ref :owner) (-> request :ref :repo))}))}
+           (when-let [deps (not-empty (:blah request))]
+             {:gpg-verify {:deps (map symbol deps)}
+              :plugins  '[[org.kipz/clj-gpg-verify "0.1.0"]]}))))
         (<? (handler request))))))
 
 (defn run-deps-tree [handler]
@@ -150,22 +152,14 @@
                                                             (merge
                                                              {;; use atm-home for .m2 directory
                                                               "_JAVA_OPTIONS" (str "-Duser.home=" (.. js/process -env -ATOMIST_HOME))}))}))]
-          (cond
-
-            err
-            (do
-              (log/warnf "Error running lein deps: %s" stderr)
-              (<? (api/finish request :failure (str "Error running lein deps: " stderr))))
-
-            (str/includes? stderr "Possibly confusing dependencies found:")
+          (if (or err
+                  (str/includes? stderr "Possibly confusing dependencies found:"))
             (<? (handler (assoc request
                                 :checkrun/conclusion "failure"
                                 :checkrun/output {:title "lein deps :tree failure"
                                                   :summary stderr}
                                 :atomist/status {:code 1
                                                  :reason (gstring/format "Possibly confusing dependencies found %s/%s:%s" (-> request :ref :owner) (-> request :ref :repo) (-> request :ref :sha))})))
-
-            :else
             (do
               (<? (transact-deps request stdout))
               (<? (handler (assoc request
@@ -209,6 +203,7 @@
        (run-gpg-verify)
        (run-deps-tree)
        (add-profile)
+       (api/add-skill-config)
        (api/clone-ref)
        (api/with-github-check-run :name "lein-deps-tree-skill")
        (create-ref-from-event)
