@@ -136,7 +136,7 @@
             ;; if the root project does not specify a url then add one to the profile
              (when-not (-> request :atomist.leiningen/non-evaled-project-map :url)
                {:url (gstring/format "https://github.com/%s/%s" (-> request :ref :owner) (-> request :ref :repo))}))}
-           (when-let [deps (not-empty (:blah request))]
+           (when-let [deps (not-empty (:gpg-verify-deps request))]
              {:gpg-verify {:deps (map symbol deps)}
               :plugins  '[[org.kipz/clj-gpg-verify "0.1.0"]]}))))
         (<? (handler request))))))
@@ -172,28 +172,32 @@
 (defn run-gpg-verify [handler]
   (fn [request]
     (go-safe
-     (let [cwd (io/file (-> request :project :path))
-           [err stdout stderr] (<? (proc/aexec "lein with-profile lein-deps-tree gpg-verify"
-                                               {:cwd (.getPath cwd)
-                                                :env (-> (-js->clj+ (.. js/process -env))
-                                                         (merge
-                                                          {;; use atm-home for .m2 directory
-                                                           "GNUPGHOME" "/opt/gpg"
-                                                           "_JAVA_OPTIONS" (str "-Duser.home=" (.. js/process -env -ATOMIST_HOME))}))}))]
-       (if
-        err
-         (do
-           (log/warnf "Error running lein gpg-verify: %s" stderr)
-           (assoc request
-                  :checkrun/conclusion "failure"
-                  :checkrun/output {:title "lein gpg-verify failure"
-                                    :summary stderr}
-                  :atomist/status {:code 1
-                                   :reason "lein gpg-verify failure. Check logs for details"}))
+     (if (not-empty (:gpg-verify-deps request))
+       (let [cwd (io/file (-> request :project :path))
+             [err stdout stderr] (<? (proc/aexec "lein with-profile lein-deps-tree gpg-verify"
+                                                 {:cwd (.getPath cwd)
+                                                  :env (-> (-js->clj+ (.. js/process -env))
+                                                           (merge
+                                                            {;; use atm-home for .m2 directory
+                                                             "GNUPGHOME" "/opt/gpg"
+                                                             "_JAVA_OPTIONS" (str "-Duser.home=" (.. js/process -env -ATOMIST_HOME))}))}))]
+         (if
+          err
+           (do
+             (log/warnf "Error running lein gpg-verify: %s" stderr)
+             (assoc request
+                    :checkrun/conclusion "failure"
+                    :checkrun/output {:title "lein gpg-verify failure"
+                                      :summary stderr}
+                    :atomist/status {:code 1
+                                     :reason "lein gpg-verify failure. Check logs for details"}))
 
-         (do
-           (log/infof "Successfully ran lein gpg-verify, continuing")
-           (<? (handler request))))))))
+           (do
+             (log/infof "Successfully ran lein gpg-verify, continuing")
+             (<? (handler request)))))
+       (do
+         (log/infof "Skipping verify as not configured")
+         (<? (handler request)))))))
 
 (defn ^:export handler
   "no arguments because this handler runs in a container that should fulfill the Atomist container contract
