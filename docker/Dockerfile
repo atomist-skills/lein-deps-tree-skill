@@ -2,7 +2,8 @@ FROM gcr.io/atomist-container-skills/clojure-base:openjdk11@sha256:eb899ffde2891
 
 RUN mkdir /opt/gpg
 
-RUN apt-get update && apt-get install -y --no-install-recommends gpg \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gpg=2.2.12-1+deb10u1 \
  && apt-get clean \
  && rm -rf /var/cache/apt /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
