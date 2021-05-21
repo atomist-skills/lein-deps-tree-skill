@@ -6,22 +6,23 @@ This page details all runtime dependencies of `@atomist/lein-deps-tree-skill`.
 
 ### Summary
 
-| License                         | Count |
-| ------------------------------- | ----- |
-| [0BSD](#0bsd)                   | 4     |
-| [Apache-2.0](#apache-20)        | 36    |
-| [BSD-2-Clause](#bsd-2-clause)   | 10    |
-| [BSD-3-Clause](#bsd-3-clause)   | 23    |
-| [CC-BY-4.0](#cc-by-40)          | 1     |
-| [CC0-1.0](#cc0-10)              | 2     |
-| [GPL-2.0](#gpl-20)              | 1     |
-| [GPL-3.0](#gpl-30)              | 1     |
-| [ISC](#isc)                     | 43    |
-| [MIT AND Zlib](#mit-and-zlib)   | 1     |
-| [MIT](#mit)                     | 591   |
-| [Public Domain](#public-domain) | 1     |
-| [Python-2.0](#python-20)        | 1     |
-| [UNKNOWN](#unknown)             | 1     |
+| License                                | Count |
+| -------------------------------------- | ----- |
+| [0BSD](#0bsd)                          | 4     |
+| [Apache-2.0](#apache-20)               | 36    |
+| [BSD-2-Clause](#bsd-2-clause)          | 10    |
+| [BSD-3-Clause](#bsd-3-clause)          | 23    |
+| [CC-BY-4.0](#cc-by-40)                 | 1     |
+| [CC0-1.0](#cc0-10)                     | 2     |
+| [GPL-2.0](#gpl-20)                     | 1     |
+| [GPL-3.0](#gpl-30)                     | 1     |
+| [ISC](#isc)                            | 43    |
+| [LGPL-3.0-or-later](#lgpl-30-or-later) | 1     |
+| [MIT AND Zlib](#mit-and-zlib)          | 1     |
+| [MIT](#mit)                            | 590   |
+| [Public Domain](#public-domain)        | 1     |
+| [Python-2.0](#python-20)               | 1     |
+| [UNKNOWN](#unknown)                    | 1     |
 
 #### 0BSD
 
@@ -74,7 +75,7 @@ Apache License 2.0 - [http://www.apache.org/licenses/LICENSE-2.0](http://www.apa
 | `rc`                                  | `1.2.8`          | Dominic Tarr          | [https://github.com/dominictarr/rc](https://github.com/dominictarr/rc)                                                           |
 | `remedial`                            | `1.0.8`          | AJ ONeal              |                                                                                                                                  |
 | `rxjs`                                | `6.6.6`          | Ben Lesh              | [https://github.com/reactivex/rxjs](https://github.com/reactivex/rxjs)                                                           |
-| `teeny-request`                       | `7.0.1`          | fhinkel               | [https://github.com/googleapis/teeny-request](https://github.com/googleapis/teeny-request)                                       |
+| `teeny-request`                       | `7.1.0`          | fhinkel               | [https://github.com/googleapis/teeny-request](https://github.com/googleapis/teeny-request)                                       |
 | `yaml-ast-parser`                     | `0.0.43`         |                       | [https://github.com/mulesoft-labs/yaml-ast-parser](https://github.com/mulesoft-labs/yaml-ast-parser)                             |
 
 #### BSD-2-Clause
@@ -92,7 +93,7 @@ BSD 2-Clause "Simplified" License - [https://opensource.org/licenses/BSD-2-Claus
 | `http-cache-semantics`       | `4.1.0`  | Kornel Lesiński   | [https://github.com/kornelski/http-cache-semantics](https://github.com/kornelski/http-cache-semantics)                     |
 | `rc`                         | `1.2.8`  | Dominic Tarr      | [https://github.com/dominictarr/rc](https://github.com/dominictarr/rc)                                                     |
 | `shimmer`                    | `1.2.1`  | Forrest L Norvell | [https://github.com/othiym23/shimmer](https://github.com/othiym23/shimmer)                                                 |
-| `uglify-js`                  | `3.13.6` | Mihai Bazon       | [https://github.com/mishoo/UglifyJS](https://github.com/mishoo/UglifyJS)                                                   |
+| `uglify-js`                  | `3.13.7` | Mihai Bazon       | [https://github.com/mishoo/UglifyJS](https://github.com/mishoo/UglifyJS)                                                   |
 
 #### BSD-3-Clause
 
@@ -170,7 +171,7 @@ ISC License - [https://www.isc.org/downloads/software-support-policy/isc-license
 | `cliui`                     | `6.0.0`   | Ben Coe            | [https://github.com/yargs/cliui](https://github.com/yargs/cliui)                                             |
 | `cliui`                     | `7.0.4`   | Ben Coe            | [https://github.com/yargs/cliui](https://github.com/yargs/cliui)                                             |
 | `deprecation`               | `2.3.1`   |                    | [https://github.com/gr2m/deprecation](https://github.com/gr2m/deprecation)                                   |
-| `electron-to-chromium`      | `1.3.730` | Kilian Valkhof     | [https://github.com/kilian/electron-to-chromium](https://github.com/kilian/electron-to-chromium)             |
+| `electron-to-chromium`      | `1.3.735` | Kilian Valkhof     | [https://github.com/kilian/electron-to-chromium](https://github.com/kilian/electron-to-chromium)             |
 | `fastq`                     | `1.11.0`  | Matteo Collina     | [https://github.com/mcollina/fastq](https://github.com/mcollina/fastq)                                       |
 | `fs.realpath`               | `1.0.0`   | Isaac Z. Schlueter | [https://github.com/isaacs/fs.realpath](https://github.com/isaacs/fs.realpath)                               |
 | `get-caller-file`           | `2.0.5`   | Stefan Penner      | [https://github.com/stefanpenner/get-caller-file](https://github.com/stefanpenner/get-caller-file)           |
@@ -206,6 +207,14 @@ ISC License - [https://www.isc.org/downloads/software-support-policy/isc-license
 | `yaml`                      | `1.10.0`  | Eemeli Aro         | [https://github.com/eemeli/yaml](https://github.com/eemeli/yaml)                                             |
 | `yargs-parser`              | `18.1.3`  | Ben Coe            | [https://github.com/yargs/yargs-parser](https://github.com/yargs/yargs-parser)                               |
 | `yargs-parser`              | `20.2.7`  | Ben Coe            | [https://github.com/yargs/yargs-parser](https://github.com/yargs/yargs-parser)                               |
+
+#### LGPL-3.0-or-later
+
+GNU Lesser General Public License v3.0 or later - [https://www.gnu.org/licenses/lgpl-3.0-standalone.html](https://www.gnu.org/licenses/lgpl-3.0-standalone.html)
+
+| Name                      | Version | Publisher           | Repository                                                                                                       |
+| ------------------------- | ------- | ------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `parse-docker-image-name` | `3.0.0` | William Blankenship | [https://github.com/retrohacker/parse-docker-image-name](https://github.com/retrohacker/parse-docker-image-name) |
 
 #### MIT
 
@@ -342,10 +351,10 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `@types/lodash.set`                                  | `4.3.6`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/lodash.sortby`                               | `4.7.6`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/lodash.uniq`                                 | `4.5.6`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
-| `@types/lodash`                                      | `4.14.169`     |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
+| `@types/lodash`                                      | `4.14.170`     |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/long`                                        | `4.0.1`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/node-fetch`                                  | `2.5.10`       |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
-| `@types/node`                                        | `15.3.0`       |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
+| `@types/node`                                        | `15.6.0`       |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/parse-json`                                  | `4.0.0`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/pluralize`                                   | `0.0.29`       |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/retry`                                       | `0.12.0`       |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
@@ -354,7 +363,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `@types/uuid`                                        | `8.3.0`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/websocket`                                   | `1.0.2`        |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@types/yargs-parser`                                | `20.2.0`       |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
-| `@types/yargs`                                       | `16.0.2`       |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
+| `@types/yargs`                                       | `16.0.3`       |                                | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped)                                                                                             |
 | `@vercel/ncc`                                        | `0.27.0`       |                                | [https://github.com/vercel/ncc](https://github.com/vercel/ncc)                                                                                                                                       |
 | `abort-controller`                                   | `3.0.0`        | Toru Nagashima                 | [https://github.com/mysticatea/abort-controller](https://github.com/mysticatea/abort-controller)                                                                                                     |
 | `agent-base`                                         | `6.0.2`        | Nathan Rajlich                 | [https://github.com/TooTallNate/node-agent-base](https://github.com/TooTallNate/node-agent-base)                                                                                                     |
@@ -426,7 +435,6 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `convert-source-map`                                 | `1.7.0`        | Thorsten Lorenz                | [https://github.com/thlorenz/convert-source-map](https://github.com/thlorenz/convert-source-map)                                                                                                     |
 | `core-util-is`                                       | `1.0.2`        | Isaac Z. Schlueter             | [https://github.com/isaacs/core-util-is](https://github.com/isaacs/core-util-is)                                                                                                                     |
 | `cosmiconfig-toml-loader`                            | `1.0.0`        | Daniel Rearden                 | [https://github.com/danielrearden/cosmiconfig-toml-loader](https://github.com/danielrearden/cosmiconfig-toml-loader)                                                                                 |
-| `cosmiconfig`                                        | `6.0.0`        | David Clark                    | [https://github.com/davidtheclark/cosmiconfig](https://github.com/davidtheclark/cosmiconfig)                                                                                                         |
 | `cosmiconfig`                                        | `7.0.0`        | David Clark                    | [https://github.com/davidtheclark/cosmiconfig](https://github.com/davidtheclark/cosmiconfig)                                                                                                         |
 | `create-require`                                     | `1.1.1`        |                                | [https://github.com/nuxt-contrib/create-require](https://github.com/nuxt-contrib/create-require)                                                                                                     |
 | `cross-fetch`                                        | `3.0.6`        | Leonardo Quixada               | [https://github.com/lquixada/cross-fetch](https://github.com/lquixada/cross-fetch)                                                                                                                   |
@@ -498,7 +506,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `globby`                                             | `11.0.3`       | Sindre Sorhus                  | [https://github.com/sindresorhus/globby](https://github.com/sindresorhus/globby)                                                                                                                     |
 | `google-p12-pem`                                     | `3.0.3`        | Ryan Seys                      | [https://github.com/google/google-p12-pem](https://github.com/google/google-p12-pem)                                                                                                                 |
 | `got`                                                | `9.6.0`        |                                | [https://github.com/sindresorhus/got](https://github.com/sindresorhus/got)                                                                                                                           |
-| `graphql-config`                                     | `3.2.0`        | Kamil Kisiela                  | [https://github.com/kamilkisiela/graphql-config](https://github.com/kamilkisiela/graphql-config)                                                                                                     |
+| `graphql-config`                                     | `3.3.0`        | Kamil Kisiela                  | [https://github.com/kamilkisiela/graphql-config](https://github.com/kamilkisiela/graphql-config)                                                                                                     |
 | `graphql-request`                                    | `3.4.0`        | Prisma Labs Team               | [https://github.com/prisma/graphql-request](https://github.com/prisma/graphql-request)                                                                                                               |
 | `graphql-tag`                                        | `2.12.4`       |                                | [https://github.com/apollographql/graphql-tag](https://github.com/apollographql/graphql-tag)                                                                                                         |
 | `graphql-ws`                                         | `4.5.1`        |                                | [https://github.com/enisdenjo/graphql-ws](https://github.com/enisdenjo/graphql-ws)                                                                                                                   |
@@ -562,7 +570,7 @@ MIT License - [https://opensource.org/licenses/MIT](https://opensource.org/licen
 | `isomorphic-fetch`                                   | `3.0.0`        | Matt Andrews                   | [https://github.com/matthew-andrews/isomorphic-fetch](https://github.com/matthew-andrews/isomorphic-fetch)                                                                                           |
 | `isomorphic-ws`                                      | `4.0.1`        | @heineiuo                      | [https://github.com/heineiuo/isomorphic-ws](https://github.com/heineiuo/isomorphic-ws)                                                                                                               |
 | `iterall`                                            | `1.3.0`        | Lee Byron                      | [https://github.com/leebyron/iterall](https://github.com/leebyron/iterall)                                                                                                                           |
-| `jose`                                               | `3.12.1`       | Filip Skokan                   | [https://github.com/panva/jose](https://github.com/panva/jose)                                                                                                                                       |
+| `jose`                                               | `3.12.2`       | Filip Skokan                   | [https://github.com/panva/jose](https://github.com/panva/jose)                                                                                                                                       |
 | `js-tokens`                                          | `4.0.0`        | Simon Lydell                   | [https://github.com/lydell/js-tokens](https://github.com/lydell/js-tokens)                                                                                                                           |
 | `js-yaml`                                            | `3.14.0`       | Vladimir Zapparov              | [https://github.com/nodeca/js-yaml](https://github.com/nodeca/js-yaml)                                                                                                                               |
 | `js-yaml`                                            | `4.1.0`        | Vladimir Zapparov              | [https://github.com/nodeca/js-yaml](https://github.com/nodeca/js-yaml)                                                                                                                               |
@@ -829,7 +837,7 @@ Python License 2.0 - [https://opensource.org/licenses/Python-2.0](https://openso
 
 | Name                | Version  | Publisher       | Repository |
 | ------------------- | -------- | --------------- | ---------- |
-| `@atomist/api-cljs` | `0.5.62` | jim@atomist.com |            |
+| `@atomist/api-cljs` | `0.5.65` | jim@atomist.com |            |
 
 ## Contact
 
