@@ -5,10 +5,10 @@
                                          {:git.repo/org [:github.org/installation-token
                                                          :git.org/name
                                                          :git.provider/url]}]}])
- :in $ $before-db %
+ :in $ $before-db % ?ctx
  :where
- (tx-push-with-content [] false ["project.clj"] [] ?commit)
+ (push-with-content-tx ?ctx [] false ["project.clj"] [] ?commit)
  [?commit :git.commit/repo ?repo]
  (repo-language ?repo "Clojure")
  (not-join []
-   (capability-configuration "atomist" "MavenRepository" "resolve" _))]
+   (skill-capability-configuration ?ctx "atomist" "MavenRepository" "resolve" _))]

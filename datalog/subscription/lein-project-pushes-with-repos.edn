@@ -10,9 +10,9 @@
                     :maven.repository/username
                     :maven.repository/repository-id])
  ?usage
- :in $ $before-db %
+ :in $ $before-db % ?ctx
  :where
- (tx-push-with-content [] false ["project.clj"] [] ?commit)
+ (push-with-content-tx ?ctx [] false ["project.clj"] [] ?commit)
  [?commit :git.commit/repo ?repo]
  (repo-language ?repo "Clojure")
- (capability-configuration "atomist" "MavenRepository" ?usage ?maven-repo)]
+ (skill-capability-configuration ?ctx "atomist" "MavenRepository" ?usage ?maven-repo)]
