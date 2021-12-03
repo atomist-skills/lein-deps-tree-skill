@@ -1,4 +1,4 @@
-FROM gcr.io/atomist-container-skills/clojure-base:openjdk11@sha256:e5a6d694cb740d8d7cd683dbbca4a259d53e81eabcd7248974a4bb5e417b9d22
+FROM gcr.io/atomist-container-skills/clojure-base:openjdk11@sha256:c812b156b7f4bd0c37ae419e02f44c40eda402f2b8c71cc7117934e9902836e0
 
 RUN mkdir /opt/gpg
 
